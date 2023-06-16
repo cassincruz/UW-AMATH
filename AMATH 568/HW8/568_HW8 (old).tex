@@ -1,0 +1,120 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage{fullpage}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{subcaption}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\title{{AMATH 568\\
+Advanced Differential Equations}\\
+{\bf \Huge Homework 8}}
+
+\author{Lucas Cassin Cruz Burke}
+
+\date{Due: March 8, 2023}
+
+\maketitle
+
+\begin{enumerate}
+    \item Consider the inverted pendulum dynamics: $$y'' + (\delta + \epsilon \cos \omega t) \sin y = 0$$
+    
+    \begin{enumerate}
+        \item Perform a Floquet analysis (computationally) of the pendulum with continuous forcing $\cos \omega t$. 
+        
+        \textbf{Solution:} We begin by Taylor expanding $\sin y$ around the unstable inverted equilibrium position $y \approx \pi$. 
+        
+        $$\sin(y+\pi) = -\sin y = -y + \frac{y^3}{3!} + \dots$$
+
+        Then to first order we find the governing equation to be given by Matthieu's equation
+
+        $$y'' - (\delta + \epsilon \cos \omega t)y=0$$
+
+        Next, we shift the time variable by $t \rightarrow t + \pi/2$ to write this governing equation as 
+
+        $$y'' - (\delta + \epsilon \sin \omega t)y=0$$
+
+        Lastly, we approximate the sinusoidal forcing $\sin \omega t$ with a step-wise constant square-wave function with frequency $\omega$. With this change, the governing equations over one period $0 \le t <T$ with $T = \frac{2\pi}{\omega}$ are given by 
+
+        \begin{align*}
+            y'' - (\delta + \epsilon)y &= 0 && 0 \le t < T/2 \\
+            y'' - (\delta - \epsilon) y &= 0 && T/2 \le t < T
+        \end{align*}
+
+        With this approximation we can calculate the Floquet discriminant for the inverted pendulum as 
+
+        $$\Gamma = y_1(T) + y_2'(T)$$
+
+        where $y_1(t)$ and $y_2(t)$ satisfy the initial conditions 
+
+        \begin{align}
+            y_1(0)= y_2'(0)=1 \\ y_2(0)= y_1'(0)=0
+        \end{align}
+
+        Using the square-wave approximation above, it is straightforward to compute the general solution $y(t)$ over the two half-periods to be 
+
+        \begin{align*}
+            y(t) = c_1 \exp \left[ \sqrt{\delta+\epsilon} t \right] + c_2 \exp \left[-\sqrt{\delta + \epsilon} t \right] && 0 \le t < T/2 \\
+            y(t) = c_3 \exp \left[ \sqrt{\delta-\epsilon} t \right] + c_4 \exp \left[-\sqrt{\delta - \epsilon} t \right] && T/2 \le t < T
+        \end{align*}
+
+        Hence, to find the particular solutions $y_1(t)$ and $y_2(t)$ we must solve for the coefficients $c_i$ for which $y(t)$ satisfies the boundary conditions (1) and (2), and which is furthermore continuous with continuous first derivative at $t = T/2$. This can be done computationally in Mathematica by defining the functions $y_L(t)$ and $y_R(t)$ as the left and right-hand side general solutions 
+
+        \begin{align*}
+            y_L(t) &= c_1 \exp \left[\sqrt{\delta +\epsilon } t \right]+c_2 \exp \left[-\sqrt{\delta +\epsilon }t\right] \\
+            y_R(t) &= c_3 \exp \left[\sqrt{\delta -\epsilon } \left(t-T/2\right)\right]+c_4 \exp \left[-\sqrt{\delta -\epsilon } \left(t-T/2\right)\right]
+        \end{align*}
+
+        where the right-hand function $y_R(t)$ is defined on the interval $t \in [0, T/2]$ such that for the full solution $y(t)$ we have $y(T)= y_R(T/2)$. We can then find $y_{1,L}(t)$ and $y_{2,L}(t)$ by solving for $c_1$ and $c_2$ such that $y_{1,L}$ and $y_{2,L}$ satisfy the initial conditions (1) and (2). Then we compute $y_{1,R}(t)$ and $y_{2,R}(t)$ by solving for $c_3$ and $c_4$ such that $y_{i,R}(0) = y_{i,L}(T/2)$ and ${y_{i,R}}'(0)={y_{i,L}}'(T/2)$. Executing this process in Mathematica, we find the solutions for the right-hand side of the particular solutions $y_1$ and $y_2$ to be
+
+        \begin{align*}
+            y_{1,R}(t) &= \frac{\sqrt{\delta +\epsilon }}{\sqrt{\delta -\epsilon }} \sinh \left(\frac{T}{2} \sqrt{\delta +\epsilon }\right)\sinh \left(t \sqrt{\delta -\epsilon }\right)+ \cosh \left(\frac{T}{2} \sqrt{\delta +\epsilon }\right)\cosh \left(t \sqrt{\delta -\epsilon }\right) \\
+            y_{2,R}(t) &= \frac{1}{\sqrt{\delta -\epsilon }} \cosh \left(\frac{T}{2} \sqrt{\delta +\epsilon }\right)\sinh \left(t \sqrt{\delta -\epsilon }\right)+\frac{1}{\sqrt{\delta +\epsilon }}\sinh \left(\frac{T}{2} \sqrt{\delta +\epsilon }\right)\cosh \left(t \sqrt{\delta -\epsilon }\right) 
+        \end{align*}
+
+        We can now compute the Floquet discriminant using 
+        
+        $$\Gamma = y_1(T) + y_2'(T) = y_{1,R}(T/2) + {y_{2,R}}'(T/2)$$ 
+        
+        and we find it to be
+
+        \begin{align*}
+            \Gamma &= \frac{2 \delta  \sinh \left(\frac{1}{2} T \sqrt{\delta -\epsilon }\right) \sinh \left(\frac{1}{2} T \sqrt{\delta +\epsilon }\right)}{\sqrt{\delta -\epsilon } \sqrt{\delta +\epsilon }}+2 \cosh \left(\frac{1}{2} T \sqrt{\delta -\epsilon }\right) \cosh \left(\frac{1}{2} T \sqrt{\delta +\epsilon }\right)
+        \end{align*}
+
+        Lastly, we use $T= 2\pi/\omega$ to write $\Gamma$ in terms of $\omega$, which gives us
+
+        $$\Gamma = \frac{2 \delta  \sinh \left(\frac{\pi  \sqrt{\delta -\epsilon }}{\omega }\right) \sinh \left(\frac{\pi  \sqrt{\delta +\epsilon }}{\omega }\right)}{\sqrt{\delta -\epsilon } \sqrt{\delta +\epsilon }}+2 \cosh \left(\frac{\pi  \sqrt{\delta -\epsilon }}{\omega }\right) \cosh \left(\frac{\pi  \sqrt{\delta +\epsilon }}{\omega }\right)$$
+
+        Hence, given $\delta$, $\epsilon$, and $\omega$ we can determine the stability of the solution by determining whether the Floquet discriminant $\Gamma$ satisfies the condition $$|\Gamma(\delta, \epsilon, \omega)| < 2$$
+
+        \item Evaluate for what values of $\delta$, $\epsilon$, and $\omega$, the pendulum is stabilized. 
+        
+        \textbf{Solution:} As stated in (a), the stability of the pendulum depends on $|\Gamma(\delta, \epsilon, \omega)|$. There are three primary domains of interest, depending on the relative scale of $\epsilon$ to $\delta$. 
+
+        \begin{enumerate}
+            \item $\delta > \epsilon$: In this case all square root terms are real-valued. Hence in the high frequency limit we have 
+            
+            \begin{align*}
+                \lim_{\omega \rightarrow \infty} \Gamma &= \frac{2 \delta  \sinh^2 (0)}{\sqrt{\delta -\epsilon } \sqrt{\delta +\epsilon }}+2 \cosh ^2 (0) =2
+            \end{align*}
+
+            So for $\delta > \epsilon$ we have $\Gamma \rightarrow 2$, meaning that the system is on the stability boundary (neutral stability).
+
+            \item $\delta = \epsilon$: In this case the 
+
+
+        \end{enumerate}
+
+        
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,300 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage{fullpage}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{bbm}
+\usepackage{dsfont}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\title{{AMATH 562\\
+Advanced Stochastic Processes}\\
+{\bf \Huge Homework 5}}
+
+\author{Lucas Cassin Cruz Burke}
+
+\date{Due: March 2, 2023}
+
+\maketitle
+
+    \begin{enumerate}
+        \item Please give an integer-valued stochastic Lévy process $(\eta_t)_{t\ge 0}$, $$\eta_t \in \mathbb Z = \{ \dots, -2, -1, 0, 1, 2, \dots \},$$
+        
+        which, furthermore, is a martingale.
+
+        \textbf{Solution:} Let $(P_t)_{t\ge 0}$ be a Poisson process with intensity $\lambda$ and let $(X_n)_{n\in \mathbb N}$ be a sequence of iid random variables with values in $\mathbb Z$ with $\mathbb E X_i =0$. Now let $\eta = (\eta_t)_{t \ge 0}$ be the compound Poisson process defined by 
+
+        $$\eta_t = \sum_{n=1}^{P_t} X_n$$
+
+        This is a Lévy process, as are all compound Poisson processes. It is clearly integer valued, since the $X_n$ summands are integer valued. Lastly, we have
+
+        \begin{align*}
+            \mathbb E[\eta_{t+s} | \mathcal F_t] &= \mathbb E[\eta_t +(\eta_{t+s}-\eta_t)|\mathcal F_t] \\
+            &= \eta_t + \mathbb E[\eta_{t+s} - \eta_t|\mathcal F_t] \\
+            &= \eta_t + \mathbb E \left[\sum_{n=P_t + 1}^{P_{t+s}} X_n \Big| \mathcal F_t \right]\\
+            &= \eta_t + \sum_{n=P_t + 1}^{P_{t+s}} \mathbb E[X_n]\\
+            &= \eta_t
+        \end{align*}
+
+        Hence $\eta_t$ is also martingale. 
+
+        \item Discuss why the Lévy process as defined in Definition 10.1.1. cannot be improved to a Gaussian distribution.
+        
+        \textbf{Solution:} The Central Limit Theorem applies to infinite sequences of i.i.d. random variables with finite expectation and variance. Since Brownian motion is defined as the limit of a sequence of scaled random walks, which are themselves sums of i.i.d. random variables, it follows from CLM that the increments of a Brownian motion are Gaussian distributed. 
+
+        The reason this does not hold for more general Lévy processes is that Lévy processes may have discontinuous jumps whose behaviour cannot be replicated by normally distributed i.i.d. increments. The jump behavior of a Lévy process is characterized by the Poisson random measure, which contains much more information than the mean and variance which characterise Gaussian distributed processes. Allowing for non-normally distributed increments enables us to work with a much larger class of processes.
+
+        \item A probability distribution is \textit{infinitely divisible} if it can be expressed as the probability distribution of the sum of an arbitrary number of independent and identically distributed (i.i.d.) random variables. It turns out that every infinitely divisible probability distribution corresponds to a Lévy process.
+        
+        \begin{enumerate}
+            \item Show that the normal distribution on $\mathbb R$ is infinitely divisible.
+            
+            \textbf{Solution:} Let $X \sim \mathcal N(\mu, \sigma^2)$. Then its characteristic function can be calculated to be 
+
+            \begin{align*}
+                \phi_X(t) = \mathbb E e^{itX} = \frac{1}{\sqrt{2\pi \sigma^2}}\int_{\mathbb R} e^{itx} \exp\left(\frac{-(x-\mu)^2}{2\sigma^2}\right) = \exp\left( i\mu t - \frac{1}{2} \sigma^2 t^2 \right)
+            \end{align*}
+
+            Now for some $n \in \mathbb N$ define $S_n$ to be the sum of $n$ iid random variables $(Z_i)_{1 \le i \le n}$.
+
+            \begin{align*}
+                S_n = \sum_{i=1}^n Z_i && Z_i \sim \mathcal N (\mu/n, \sigma^2/n)
+            \end{align*}
+
+            The characteristic function of $S_n$ can be calculated as 
+
+            \begin{align*}
+                \phi_{S_n}(t) &= \left(\phi_{Z}(t) \right)^n =  \exp\left( i\mu t/n - \frac{1}{2} \sigma^2 t^2/n \right)^n = \exp\left( i\mu t - \frac{1}{2} \sigma^2 t^2 \right)\\
+                &= \phi_X(t)
+            \end{align*}
+
+            Since we can express $\mathcal N(\mu, \sigma^2)$ as the distribution of the sum of an arbitrary number of iid random variables, the normal distribution is infinitely divisible.
+
+
+            \item Show that the Poisson distribution on $\mathbb N$ is infinitely divisible.
+            
+            \textbf{Solution:} Let $P \sim \text{Poi}(\lambda)$. Then we can calculate the characteristic function 
+
+            \begin{align*}
+                \phi_P(t) &= \mathbb Ee^{itP} = \sum_{n=0}^\infty e^{itn} \frac{\lambda^n}{n!}e^{-\lambda} \\
+                &= e^{-\lambda} \sum_{n=0}^\infty \frac{(\lambda e^{it})^n}{n!} \\
+                &= \exp(-\lambda(1-e^{it}))
+            \end{align*}
+
+            Now for some $n \in \mathbb N$ define $S_n$ to be the sum of $n$ iid random variables $(Z_i)_{1 \le i \le n}$, with
+
+            \begin{align*}
+                S_n = \sum_{i=1}^n Z_i && Z_i \sim \text{Poi}(\lambda/n)
+            \end{align*}
+
+            Then the characteristic function of $S_n$ can be calculated as 
+
+            \begin{align*}
+                \phi_{S_n}(t) &= (\phi_Z(t))^n = \exp(-\lambda(1-e^{it})/n)^n = \exp(-\lambda(1-e^{it})) \\
+                &= \phi_P(t)
+            \end{align*}
+
+            Since we can express $\text{Poi}(\lambda)$ as the distribution of the sum of an arbitrary number of iid random variables, the Poisson distribution is infinitely divisible.
+
+            \item The pdf of the Cauchy distribution is 
+            
+            $$f_X(x) = \frac{\gamma}{\pi (\gamma^2 + x^2)}$$ 
+            
+            Show that its characteristic function $\phi_X(u) := \mathbb E\left[ e^{iuX} \right]$ is $e^{-\gamma |u|}$. What are its expected value and its variance?
+
+            \textbf{Solution:} We have 
+
+            \begin{align*}
+                \phi_X(u) &= \mathbb E [e^{iuX}] \\
+                &= \int_{-\infty}^\infty e^{iux} f_X(x)dx\\
+                &= \frac{\gamma}{\pi} \int_{-\infty}^\infty \frac{e^{iux}}{\gamma^2 + x^2} dx \\
+                &= \frac{\gamma}{\pi} I
+            \end{align*}
+
+            To evaluate the integral $I$, consider the contour integral 
+
+            $$I_C = \int_C \frac{e^{iuz}}{\gamma^2 + z^2}dz$$
+
+            where $C$ is the positively-oriented semicicular contour enclosing the upper half plane if $u>0$, and the negatively-oriented semicicular contour enclosing the lower half plane if $u<0$. Since $1/(\gamma^2 + z^2) \rightarrow 0$ as $|z| \rightarrow \infty$, by Jordan's lemma we have that $I_C = I$. We will now calculate $I_C$ using the residue theorem. We note that the integrand has simple poles at $z = \pm i\gamma$, whose residues we calculate as 
+
+            \begin{align*}
+                \text{Res}(i\gamma) &= \lim_{z \rightarrow i\gamma} \frac{e^{iuz}}{z+ i\gamma} = \frac{e^{-\gamma u}}{2i\gamma} \\
+                \text{Res}(-i\gamma) &= \lim_{z \rightarrow -i\gamma} \frac{e^{iuz}}{z-i\gamma} = \frac{-e^{\gamma u}}{2i\gamma}
+            \end{align*}
+
+            Hence, by the residue theorem we find 
+
+            \begin{align*}
+                I_C &= \begin{cases} 2 \pi i \text{Res}(i\gamma) = \frac{\pi}{\gamma} e^{-\gamma u} & u>0 \\ -2 \pi i \text{Res}(-i\gamma) = \frac{\pi}{\gamma}e^{\gamma u} & u<0 \end{cases} \\
+                &= \frac{\pi}{\gamma} e^{-\gamma |u|}
+            \end{align*}
+
+            Returning to our original calculation, we have
+
+            \begin{align*}
+                \phi_X(u) &= \frac{\gamma}{\pi} I = \frac{\gamma}{\pi} I_C \\
+                &= e^{-\gamma |u|}
+            \end{align*}
+
+            Note that $\phi_X(u)$ is not differentiable at $u=0$, and hence the mean, variance, and all $n>0$ moments of $X$ are undefined.
+
+            \item A real-valued random variable $X$ is infinitely divisible if and only if its characteristic function $\phi_X(u)$ is of the form $e^{\psi(u)}$, with 
+            
+            \begin{align}
+                \psi(u) = i\mu u - \frac{1}{2} \sigma^2 u^2 + \int_{\mathbb R} \left( e^{iuz} - 1-iuz \mathds{1}_{|z|<1} \right)\nu(dz).
+            \end{align}
+
+            We see that when the $\nu(dz)=0$, the $\phi_X(u)$ corresponds to the normal distribution $\mathcal N(\mu, \sigma^2)$. Taking Eq. 1 as given, with $\mu=\sigma=0$, find the $\nu(dz)$ such that $X$ has a Cauchy distribution.
+
+            \textbf{Solution:} If $X$ is Cauchy-distributed, then we know from part (c) that $\phi_X(u) = e^{-\gamma |u|}$, which means that $\psi(u) = -\gamma |u|$. Hence, letting $\mu=\sigma=0$, we have
+
+            \begin{align*}
+                -\gamma |u| = \int_{\mathbb R} \left( e^{iuz} - 1-iuz \mathds{1}_{|z|<1} \right)\nu(dz) = \int_{\mathbb R}\left(e^{iuz}-1 \right) \nu(dz) - iu \int_{-1}^1 z \nu(dz)
+            \end{align*}
+
+            For the right hand side to converge we need $\nu(dz)\sim z^{-k} dz$ for some $k \ge 1$. We also note that for even $k$ the second integral goes away, as the integrand is odd. Lastly, we note that $\mathcal F\{|x|\}(k) \sim \frac{1}{k^2}$. For these reasons, let $k=2$ and let $\nu(dz)=A\frac{dz}{z^2}$. With this, we have 
+
+            \begin{align*}
+                -\gamma |u| = A \int_{\mathbb R} \left( e^{iuz} -1 \right) \frac{dz}{z^2} = AI
+            \end{align*}
+
+            Now let $C$ be a positively oriented semicircular contour enclosing the upper half of the complex plane if $u>0$, and a negatively oriented semicicular contour enclosing the lower half plane if $u<0$. Then we have 
+
+            $$\mathcal P I = I_C = \int_C \frac{e^{iuz}-1}{z^2}dz$$
+
+            where $\mathcal P I$ denotes the Cauchy principle value of the integral $I$ over $\mathbb R \setminus \{0\}$. $I_C$ has a simple pole on the contour at $z=0$. We evaluate the residue to be 
+
+            \begin{align*}
+                \text{Res}(0) = \lim_{z\rightarrow 0} \frac{e^{iuz}-1}{z} = \lim_{z\rightarrow 0} \frac{iu e^{iuz}}{1} = iu
+            \end{align*}
+
+            Hence by the residue theorem, (and taking care to change the direction of integration for $u<0$), we have 
+
+            $$\mathcal P I = I_C = -\pi |u|$$
+
+            Applying this result above, we have 
+
+            \begin{align*}
+                -\gamma |u| = -A\pi |u| \Rightarrow A=\frac{\gamma}{\pi}
+            \end{align*}
+
+            Hence, we conclude that 
+
+            $$\nu(dz) = -\frac{\gamma}{\pi} \frac{dz}{z^2}$$
+
+            corresponds to the Cauchy distribution. 
+
+        \end{enumerate}
+
+        \item Let $P_t$ be a Poisson process with rate $\lambda$. Consider the compensated Poisson process defined by 
+        
+        $$\tilde P_t = P_t - \mathbb E[P_t]$$
+
+        Show that its characteristic function has the form 
+            
+        $$\mathbb E \left[e^{iu\tilde P_t} \right] = e^{t\psi(u)}.$$
+
+        and give an expression for $\psi(u)$.
+
+        \textbf{Solution:} We have 
+
+        \begin{align*}
+            \phi_{\tilde P_t}(u) &= \mathbb E \left[e^{iu\tilde P_t} \right] \\
+            &= \mathbb E \left[e^{iu(P_t - \mathbb E[P_t])} \right] \\
+            &= e^{-iu\lambda t} \mathbb E\left[e^{iu P_t} \right] \\
+            &= e^{-iu\lambda t} \sum_{k=0}^\infty e^{iuk} \frac{(\lambda t)^k}{k!} e^{-\lambda t} \\
+            &= e^{-\lambda t(1+iu)} \sum_{k=0}^\infty \frac{(\lambda t e^{iu})^k}{k!} \\
+            &= e^{-\lambda t(1+iu-e^{iu})}
+        \end{align*}
+
+        Hence, we see that the characteristic function of $\tilde P_t$ has the form $\phi_{\tilde P_t}(u) = e^{t\psi(u)}$ with 
+
+        $$\psi(u) = -\lambda(1+iu-e^{iu})$$
+
+        \item \textbf{Exercise 10.1:} Let $P = (P_t)_{t\ge 0}$ be a Poisson process with intensity $\lambda$. 
+        
+        \begin{enumerate}
+            \item What is the Lévy measure $\nu$ of $P$? 
+            
+            \textbf{Solution:} By definition of the Lévy measure we have
+
+            \begin{align*}
+                \nu(U) := \mathbb E N(1,U)  =\mathbb E \int_0^1 \mathds 1_{\{\Delta P_s \in U\}}ds && \forall U \in \mathcal B_0 := \mathcal B(\mathbb R) \setminus \{0\}
+            \end{align*}
+
+            where $N(t,U)$ is the Poisson random measure of $P$, and  $\Delta P_s$ is the jump of $P$ at time $s$. Since Poisson processes are pure jump processes we have $P_t = \int_0^t \Delta P_s ds$. Furthermore, since Poisson processes are counting processes, we have $\forall s \in (0,t]: \Delta P_s \in \{0, 1\}$ almost surely. Now let $U \in \mathcal B_0$ such that $1 \in U$. Then from the above properties and the definition of the Poisson random measure we have
+
+            \begin{align*}
+                N(t,U) = \int_0^t \mathds 1_{\{\Delta P_s \in U \}} ds = \int_0^t \mathds 1_{\{\Delta P_s = 1\}} ds = \int_0^t \Delta P_s ds = P_t
+            \end{align*}
+
+            For a general $U \in \mathcal B_0$ we have
+
+            \begin{align*}
+                N(t, U) &= \begin{cases} P_t & 1 \in U \\ 0 & 1 \notin U \end{cases} = P_t \mathds 1_{\{1 \in U\}}
+            \end{align*}
+
+            With this we can calculate the Lévy measure $\nu$ of $P$ to be
+
+            \begin{align*}
+                \nu(U) &= \mathbb E N(1, U) = \mathbb E [P_1 \mathds 1_{\{ 1 \in U \}}] = \mathds 1_{\{ 1 \in U \}} \mathbb E [P_1] \\
+                &= \lambda \mathds 1_{\{ 1 \in U \}}
+            \end{align*}
+
+            \item Let $dX_t = dP_t$. Define $u(t,x):= \mathbb E[\varphi(X_T)|X_t = x]$. Find $u(t,x)$ and verify that it solves the Kolmogorov backward equation. 
+            
+            \textbf{Solution:} We have 
+
+            \begin{align*}
+                u(t,x) &= \mathbb E[\varphi(X_T)|X_t = x] \\
+                &= \sum_{n=0}^\infty \varphi(n)\mathbb P (X_T = n| X_t=x)\\
+                &= \sum_{n=x}^\infty \varphi(n) \frac{(\lambda(T-t))^{n-x}}{(n-x)!} e^{-\lambda(T-t)} \\
+                &= e^{-\lambda(T-t)}\sum_{k=0}^\infty \varphi(k+x) \frac{(\lambda(T-t))^k}{k!}
+            \end{align*}
+
+            To show that $u(t,x)$ solves the Kolmogorov backward equation, we will first show that $u(t,X_t)$ is martingale. We have 
+
+            \begin{align*}
+                \mathbb E[u(t+s, X_{t+s})|\mathcal F_t] &= \mathbb E[\mathbb E[\varphi(X_T)|\mathcal F_{t+s}]|\mathcal F_t] = \mathbb E[\varphi(X_T)|\mathcal F_t] = u(t, X_t)
+            \end{align*}
+
+            Hence $u(t,X_t)$ is martingale. Next, we use the Itô formula (Lorig 10.2.1) to calculate the differential of $u(t,X_t)$. Using $dX_t=dP_t=\int_{\mathbb R} \tilde N(dt, dz)$, and the expressions for $N(t,U)$ and $\nu(U)$ derived in (a), we have 
+
+            \begin{align*}
+                du(t,X_t) &= \frac{\partial u}{\partial t}(t,X_t) dt + \int_{\mathbb R} \left[ u(t, X_{t^-} + 1) - u(t, X_{t^-}) \right] N(dt, dz) - \int_{\mathbb R} \frac{\partial u}{\partial x}(t, X_t) \nu(dz) dt \\
+                &= \frac{\partial u}{\partial t}(t,X_t) dt + \lambda \left[ u(t, X_{t^-} + 1) - u(t, X_{t^-}) - \frac{\partial u}{\partial x}(t, X_t) \right]dt \\
+                &= \left[ \partial_t + \lambda \left( \theta_1 - 1 - \partial_x  \right) \right]u(t, X_t)dt
+            \end{align*}
+
+            where we have utilized the shift operator $\theta_1$ defined by $\theta_1 u(t,x) = u(t,x+1)$. Since $u(t,X_t)$ is martingale the $dt$-term must equal to zero, which means that 
+
+            \begin{align}
+                \left[ \partial_t + \lambda \left( \theta_1 - 1 - \partial_x  \right) \right]u(t, X_t) = 0
+            \end{align}
+
+            We can use Lorig 10.3.3. to calculate the generator $\mathcal A(t)$ of the SDE solution $X$ as 
+
+            \begin{align*}
+                \mathcal A(t) &= \int_{\mathbb R} \nu(dz) \left(\theta_1 - 1 - \partial_x \right) \\
+                &= \lambda \left(\theta_1 - 1 - \partial_x \right)
+            \end{align*}
+
+            Hence we conclude that $u(t,x)$ must satisfy
+
+            \begin{align*}
+                (\partial_t + \mathcal A(t)) u(t,X_t) = 0
+            \end{align*}
+
+            along with the terminal condition $u(T, X_T)= \varphi(X_T)$. This shows that $u(t,x)$ solves the Kolmogorov backward equation. 
+
+
+        \end{enumerate}
+
+    \end{enumerate}
+\end{document}

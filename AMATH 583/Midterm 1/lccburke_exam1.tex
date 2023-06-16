@@ -1,0 +1,400 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+
+% Page layout
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Lucas Cassin Cruz Burke}
+\rhead{AMATH 569}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
+
+% Theorem environments
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\theoremstyle{remark}
+\newtheorem*{solution}{Solution}
+
+\title{AMATH 583 Exam 1}
+\author{Lucas Cassin Cruz Burke}
+\date{April 28, 2023}
+
+\begin{document}
+
+\maketitle
+
+\section{Handwritten questions}
+\begin{problem}
+    \textbf{Linear independence.} Determine if the given functions ($x\in \mathbb R$) are linearly dependent or not.
+
+    \begin{enumerate}
+        \item $f_1(x) = x^2-3$, $f_2(x) = 2-x$, $f_3(x)=(x-1)^2$
+        \item $f_1(x)=e^x$, $f_2(x)=e^{x+1}$
+        \item $f_1(x)=e^x$, $f_2(x)=e^{2x}$, $f_3(x)=e^{3x}$
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    To determine whether the given sets of functions are linearly independent we can compute each of their Wronksians. If the Wronksian is zero, then we know that the function set is linearly dependent.
+
+    \begin{enumerate}
+        \item For the first function set we can compute the Wronskian 
+        \begin{align*}
+            W(f_1, f_2, f_3) &= \begin{vmatrix}
+                f_1(x) & f_2(x) & f_3(x) \\
+                f_1'(x) & f_2'(x) & f_3'(x) \\
+                f_1''(x) & f_2''(x) & f_3''(x) 
+            \end{vmatrix}
+        \end{align*}
+
+        However, in this particular case it is quicker to simply expand $f_3(x)$ as 
+
+        \begin{align*}
+            f_3(x) &= (x-1)^2 = x^2 -2x +1 \\
+            &= (x^2-3) + 2(2-x) \\
+            &= f_1(x) +2f_2(x)
+        \end{align*}
+
+        Since $f_3(x)$ can be written as a linear combination of $f_1(x)$ and $f_2(x)$, it follows that the set $\{f_1, f_2, f_3\}$ is linearly dependent. 
+
+        \item As before, linear dependence can be shown by computing the Wronkskian $f_1(x) f_2'(x) - f_2(x) f_1'(x)$. However, we can see here that 
+        $$f_2(x) = e^{x+1} = e \cdot e^x = e f_1(x)$$
+
+        Since $f_2(x)$ is a scalar multiple of $f_1(x)$, it follows that the set $\{f_1, f_2\}$ is linearly dependent
+
+        \item In this case our functions are linearly independent. We can show this by computing the Wronskian as follows.
+
+        \begin{align*}
+            W(f_1, f_2, f_3) &= \begin{vmatrix}
+                f_1(x) & f_2(x) & f_3(x) \\
+                f_1'(x) & f_2'(x) & f_3'(x) \\
+                f_1''(x) & f_2''(x) & f_3''(x) 
+            \end{vmatrix} \\
+            &= \begin{vmatrix}
+                e^x & e^{2x} & e^{3x} \\
+                e^{x} & 2e^{2x} & 3 e^{3x} \\
+                e^x & 4 e^{2x} & 9 e^{3x}
+            \end{vmatrix} \\
+            &= e^{x}(18 e^{5x} - 12 e^{5x})- e^{2x}(9e^{4x}-3e^{4x}) + e^{3x}(4e^{3x}-2e^{3x}) \\
+            &= e^{6x}(6-6+2)\\
+            &= 2e^{6x}
+        \end{align*}
+
+        Since the Wronksian does not vanish, we conclude that the set $\{f_1, f_2, f_3\}$ is linearly independent. 
+    \end{enumerate}
+\end{solution}
+
+\begin{problem}
+    \textbf{Basis.} Consider the family of degree-2 polynomials $\mathbb P_2$, and the set of polynomials $\{1, (1-x), (1-x)^2\}$. 
+    \begin{enumerate}
+        \item Prove that the given set of polynomials forms a basis for this space of quadratic polynomials. 
+        \begin{solution}
+            Let $\mathcal P = \{p_1(x), p_2(x),p_3(x)\} =\{1, (1-x), (1-x)^2\}$.  We will begin by proving linear independence by computing the Wronksian of $\mathcal P$. 
+
+            \begin{align*}
+                W &= \begin{vmatrix}
+                        f_1(x) & f_2(x) & f_3(x) \\
+                        f_1'(x) & f_2'(x) & f_3'(x) \\
+                        f_1''(x) & f_2''(x) & f_3''(x) 
+                \end{vmatrix} \\
+                &= \begin{vmatrix}
+                    1 & 1-x & (1-x)^2 \\
+                    0 & -1 & -2(1-x) \\
+                    0 & 0 & 2
+                \end{vmatrix} \\
+                &= -2
+            \end{align*}
+
+        The Wronskian matrix is upper triangular with a nonzero determinant, from which it follows that the provided set of polynomials is linearly independent. 
+
+        Next we will show that $\mathbb P_2 \subseteq \operatorname{Span} \mathcal P$. To do this, we will show that each element of the canonical $\mathbb P_2$ basis $\{1, x, x^2\}$ can be represented by a linear combination of the functions $p_i(x) \in \mathcal P$. We have 
+
+        \begin{itemize}
+            \item $1 = p_1(x)$ 
+            \item $x = 1-(1-x) = p_1(x) -p_2(x)$
+            \item $x^2 = (1-x)^2-1+2x = p_3(x) - p_1(x) + 2(p_1(x) - p_2(x)) = p_3(x) - 2 p_2(x) + p_1(x)$
+        \end{itemize}
+
+        Since each element of the $\mathbb P_2$ basis $\{1, x, x^2\}$ can be represented by a linear combination of $p_i(x) \in \mathcal P$, and since $\mathcal P$ is linearly independent, it follows that $\mathcal P = \{1, (1-x), (1-x)^2\}$ forms a basis for the space of quadratic polynomials.
+        \end{solution}
+        \item Find the coefficients $a,b,c$ such that $p(x) = 1+x^2=a(1)+b(1-x)+c(1-x)^2$. 
+        \begin{solution}
+            Using our results from the last section we can rewrite $p(x)$ in the basis $\mathcal P = \{1, (1-x), (1-x)^2\}$. 
+
+            \begin{align*}
+                p(x) &= 1+x^2 \\
+                &= p_1(x) + p_3(x) - 2p_2(x) + p_1(x) \\
+                &= 2 p_1(x) - 2p_2(x) +p_3(x) \\
+                &= 2(1) - 2(1-x) + (1-x)^2
+            \end{align*}
+
+            Hence our coefficients are given by \begin{align*}
+                a = 2 && b=-2 && c=1
+            \end{align*}
+        \end{solution}
+    \end{enumerate}
+\end{problem}
+
+\begin{problem}
+    \textbf{Norm.} Consider the set of all continuously differentiable functions with domain $[0, 1]$, $X=C^1([0,1], \mathbb C)$. Define the quantity $N(f)=|f(1)|+\max_{0 \le x \le 1}|f'(x)|$ for $f \in X$. 
+    \begin{enumerate}
+        \item Prove that $N$ is a norm on $X$. 
+        \begin{solution}
+            A \textbf{norm} on a vector space $X$ is a real-valued function defined on $X$ which satisfies the following definitional properties: 
+
+            \begin{enumerate}
+                \item $||x|| \ge 0$
+                \item $||x||=0 \Leftrightarrow x=0$
+                \item $\forall \alpha \in \mathbb R : ||\alpha x|| = |\alpha| ||x||$
+                \item $||x+x'|| \le ||x|| + ||x'||$ \textit{(Triangle inequality)}
+            \end{enumerate}
+
+            To show that $N(f)$ is a norm, we will demonstrate that it satisfies each of these properties in turn. 
+
+            \begin{enumerate}
+                \item $||x|| \ge 0$: Since $N(f)$ is a the sum of two absolute values $|f(1)| \ge 0$ and $|f'(x)| \ge 0$ for some $x \in [0,1]$, it follows that $N(f) \ge 0$ for all $f \in X$. 
+                \item $||x||=0 \Leftrightarrow x=0$: If $N(f) =0$ then it follows that both $|f(1)| = 0$ and hence $f(1)=0$, and also that $\max_{0 \le x \le 1} |f'(x)| = 0$ and hence that $f'(x) =0$ for all $x \in [0,1]$, which implies that $f(x)$ is constant. Hence, $N(f) =0 \implies f(x)=0$ on the domain. Conversely, for $f(x)=0$ we have $$N(f) = |f(1)| + \max_{0 \le x \le 1} |f'(x)| = 0 + \max_{0 \le x \le 1} 0 =0$$
+                and hence $f(x) =0 \implies N(f) =0$. From these two implications it follows that $N(f) = 0 \Leftrightarrow f(x) =0$. 
+                \item $\forall \alpha \in \mathbb R : ||\alpha x|| = |\alpha| ||x||$: Consider $N(\alpha f)$ for $\alpha \in \mathbb R$. We have 
+                \begin{align*}
+                    N(\alpha f) &= |\alpha f(1)| + \max_{0 \le x \le 1} |\alpha f'(x)| \\
+                    &= |\alpha|\left(|f(1)| + \max_{0 \le x \le 1} |f'(x)|\right) \\
+                    &= |\alpha| N(f)
+                \end{align*}
+                \item $||x+x'|| \le ||x|| + ||x'||$: Consider $N(f+g)$ for $f, g \in X$. We have 
+                \begin{align*}
+                    N(f+g) &= |f(1)+g(1)| + \max_{0 \le x \le 1} |f'(x) + g'(x)| \\
+                    &\le |f(1)| + |g(1)| + \max_{0 \le x \le 1} \left(|f'(x)| + |g'(x)|\right)\\
+                    &\le |f(1)| + \max_{0 \le x \le 1} |f'(x)| + |g(1)| + \max_{0 \le x \le 1} |g'(x)| \\
+                    &\le N(f) + N(g)
+                \end{align*}
+                Hence $N$ satisfies the triangle inequality.
+            \end{enumerate}
+            We have shown that $N$ satisfies all of the definitional properties of a norm on $X$, which is sufficient to prove that $N$ is a norm on $X$.
+        \end{solution}
+    \end{enumerate}
+\end{problem}
+
+\begin{problem}
+    \textbf{Gram-Schmidt.} Consider the inner product $\langle x, y \rangle = \int_{-1}^1 x(t) y(t) dt$ and set $x_1(t) =t^2$, $x_2(t) =t$, $x_3(t) =1$. 
+
+    \begin{enumerate}
+        \item Orthonormalize the set.
+        \begin{solution}
+            We will define an orthonormal basis $\{e_1, e_2, e_3\}$ such that $\operatorname{span} \{e_1, e_2, e_3\} = \operatorname{span} \{x_1, x_2, x_3\}$. To begin, we will define the first element $e_1$ as 
+            
+            $$e_1 = \frac{x_1}{||x_1||} = \frac{t^2}{\sqrt{\langle t^2, t^2 \rangle}}$$
+
+            We can compute the inner product by computing the integral 
+
+            \begin{align*}
+                \langle t^2, t^2 \rangle &= \int_{-1}^1 t^4 dt = \frac{1}{5} t^5 \Bigg|_{-1}^1 = \frac{2}{5}
+            \end{align*}
+
+            Hence the first normalized element of our basis is 
+
+            $$e_1 = \sqrt{\frac{5}{2}} t^2$$
+
+            To find our next basis element $e_2$ we begin by finding the components of $x_2$ which are orthogonal to $e_1$. 
+
+            $$v_2 = x_2 - \langle x_2, e_1 \rangle e_1 = t - \frac{5}{2}\langle t, t^2 \rangle t^2= t$$
+
+            Since our domain is symmetric the inner product of an even function with an odd function must be zero, which can be shown explicitly as follows:
+
+            \begin{align*}
+                \langle t, t^2 \rangle &= \int_{-1}^1 t^3 dt = \frac{1}{4} t^4 \Bigg|_{-1}^1 = 0
+            \end{align*}
+
+            Next we normalize $v_2$ to find our second orthonormal basis vector $e_2$. 
+
+            \begin{align*}
+                e_2 = \frac{v_2}{||v_2||} = \frac{t}{\sqrt{\langle t, t \rangle}}
+            \end{align*}
+
+            We again compute the relevant inner product.
+
+            $$\langle t, t \rangle = \int_{-1}^1 t^2 dt = \frac{1}{3} t^3 \Bigg |_{-1}^1 = \frac{2}{3}$$
+
+            Hence our second orthonormal basis vector $e_2$ is given by 
+
+            $$e_2 = \sqrt{\frac{3}{2}} t$$
+
+            We repeat this process one last time to find $e_3$. We begin by finding the component of $x_3$ which is orthogonal to both $e_1$ and $e_2$. 
+
+            $$v_3 = x_3 - \langle x_3, e_1 \rangle e_1 - \langle x_3, e_2 \rangle e_2 = 1 - \frac{5}{2}\langle 1, t^2 \rangle t^2 - \frac{3}{2} \langle 1, t \rangle t = 1 - \frac{5}{2}\langle 1, t^2 \rangle t^2$$
+
+            We have dropped the $\langle 1, t \rangle$ term since $1$ is even and $t$ is odd, and so the only inner product which needs to be computed is 
+
+            \begin{align*}
+                \langle 1, t^2 \rangle = \int_{-1}^1 t^2 dt = \frac{2}{3}
+            \end{align*}
+
+            Hence, we have 
+
+            $$v_3 = 1-\frac{5}{2}\frac{2}{3} t^2 = 1-\frac{5}{3}t^2$$
+
+            Lastly, we need to normalize this to get $e_3$. We have
+
+            \begin{align*}
+                \langle v_3, v_3 \rangle &= \int_{-1}^1 \left( 1-\frac{5}{3} t^2 \right)^2 dt  = \int_{-1}^1 \left(1 - \frac{10}{3}t^2 + \frac{25}{9}t^4  \right)dt \\
+                &= t - \frac{10}{9} t^3 + \frac{5}{9} t^5 \Bigg|_{-1}^1 = 2 - \frac{20}{9} + \frac{10}{9} \\
+                &= \frac{8}{9}
+            \end{align*}
+
+            Hence our final normalized basis vector is 
+
+            $$e_3 = \frac{v_3}{||v_3||} = \frac{v_3}{\sqrt{\langle v_3, v_3 \rangle}} = \frac{3}{\sqrt{8}} - \frac{5}{\sqrt{8}} t^2$$
+
+            All together, our orthonormalized basis is given by \begin{align*}
+                e_1 = \sqrt{\frac{5}{2}}t^2 &&
+                e_2 = \sqrt{\frac{3}{2}} t &&
+                e_3 = \frac{1}{\sqrt{8}}\left( 3 - 5t^2 \right)
+            \end{align*}
+        \end{solution}
+        \item Check normality and orthogonality.
+        \begin{solution}
+            We will begin by showing normality. 
+
+            \begin{enumerate}
+                \item \begin{align*}
+                    \langle e_1, e_1 \rangle &= \frac{5}{2} \langle t^2, t^2 \rangle = \int_{-1}^1 t^4 dt = \frac{5}{2} \frac{1}{5} t^5 \Bigg|_{-1}^1 = \frac{5}{2} \cdot \frac{2}{5} = 1
+                \end{align*}
+                \item \begin{align*}
+                    \langle e_2, e_2 \rangle &= \frac{3}{2} \langle t, t \rangle = \frac{3}{2} \int_{-1}^1 t^2 dt = \frac{3}{2} \frac{1}{3} t^3 \Bigg|_{-1}^1 = \frac{3}{2} \cdot \frac{2}{3} = 1
+                \end{align*}
+                \item \begin{align*}
+                    \langle e_3, e_3 \rangle &= \frac{1}{8} \langle 3-5t^2, 3-5t^2 \rangle = \frac{1}{8} \int_{-1}^1 \left( 3-5t^2 \right)^2 dt \\&= \frac{1}{8} \int_{-1}^1 \left(9 - 30 t^2 + 25 t^4 \right)dt = \frac{1}{8}\left(9t - 10 t^3 + 5 t^5 \right)\Bigg|_{-1}^1 \\
+                    &= \frac{1}{8}\left(18 - 20 + 10\right) = \frac{1}{8} \cdot 8 \\
+                    &= 1
+                \end{align*}
+
+                Next we will show orthogonality. 
+
+                \begin{itemize}
+                    \item \begin{align*}
+                        \langle e_1, e_2 \rangle &= \frac{\sqrt{15}}{2} \langle t^2, t \rangle = \frac{\sqrt{15}}{2} \int_{-1}^1 t^3 dt = 0
+                    \end{align*}
+
+                    \item \begin{align*}
+                        \langle e_1, e_3 \rangle &= \frac{\sqrt{5}}{4} \langle t^2, 3-5t^2 \rangle = \frac{\sqrt{5}}{4} \int_{-1}^1 t^2(3-5t^2) dt \\
+                        &= \frac{\sqrt{5}}{4} \int_{-1}^1 \left(3t^2 - 5t^4 \right) dt = \frac{\sqrt{5}}{4} \left(t^3 - t^5 \right)\Bigg|_{-1}^1 = 0
+                    \end{align*}
+
+                    \item \begin{align*}
+                        \langle e_2, e_3 \rangle &= \frac{\sqrt{3}}{4} \langle t, 3-5t^2 \rangle = \frac{\sqrt{3}}{4} \int_{-1}^1 t(3-5t^2) dt \\
+                        &= \frac{\sqrt{3}}{4} \int_{-1}^1 \left( 3t - 5t^3 \right) dt = 0
+                    \end{align*}
+
+                    Hence the vectors $\{e_1,e_2,e_3\}$ are normalized and mutually orthogonal, making them an orthonormal set.
+                \end{itemize}
+            \end{enumerate}
+        \end{solution}
+    \end{enumerate}
+\end{problem}
+
+\begin{problem}
+    \textbf{LU factorization.} Find the \textit{LU} factorization of $A = \begin{pmatrix}
+        3 & -6 & -3 \\
+        2 & 0 & 6 \\
+        -4 & 7 & 4
+    \end{pmatrix}$
+\end{problem}
+\begin{solution}
+    We seek a pair of matrices $L, U \in \mathbb R^3$ 
+
+    \begin{align*}
+        L = \begin{pmatrix}
+            l_{11} & 0 & 0 \\
+            l_{21} & l_{22} & 0 \\
+            l_{31} & l_{32} & l_{33}
+        \end{pmatrix} &&
+        U = \begin{pmatrix}
+            u_{11} & u_{12} & u_{13}\\
+            0 & u_{22} & u_{23}\\
+            0 & 0 & u_{33}
+        \end{pmatrix}
+    \end{align*}
+
+    Such that $LU = A$. We can compute the $L$ and $U$ matrices using a modified version of Gaussian elimination. 
+
+    To begin, let us define $U^{(0)} = A$ and $L^{(0)} = I$, where $I$ is the identity matrix. 
+
+    \begin{align*}
+        L^{(0)} = \begin{pmatrix}
+            1 & 0 & 0 \\
+            0 & 1 & 0 \\
+            0 & 0 & 1
+        \end{pmatrix} &&
+        U^{(0)} = \begin{pmatrix}
+            3 & -6 & -3 \\
+            2 & 0 & 6 \\
+            -4 & 7 & 4
+        \end{pmatrix}
+    \end{align*}
+
+    We want to eliminate the lower diagonal terms from the $U$ matrix. We will begin by eliminating the $2$ from the second row. To do this, we can multiply the first row by $2/3$ and subtract this from the second row. For the $L$ matrix, we record this multiplier in the position where we just eliminated the value. 
+
+    \begin{align*}
+        L^{(1)} = \begin{pmatrix}
+            1 & 0 & 0 \\
+            \frac{2}{3} & 1 & 0 \\
+            0 & 0 & 1
+        \end{pmatrix} &&
+        U^{(1)} = \begin{pmatrix}
+            3 & -6 & -3 \\
+            0 & 4 & 8 \\
+            -4 & 7 & 4
+        \end{pmatrix}
+    \end{align*}
+
+    Next, we eliminate the $-4$ term from the bottom row of $U$. We can do this by multiplying the upper row by $4/3$ and adding this to the bottom row. For $L$, we record the multiplier $-4/3$. 
+
+    \begin{align*}
+        L^{(2)} = \begin{pmatrix}
+            1 & 0 & 0 \\
+            \frac{2}{3} & 1 & 0 \\
+            -\frac{4}{3} & 0 & 1
+        \end{pmatrix} &&
+        U^{(2)} = \begin{pmatrix}
+            3 & -6 & -3 \\
+            0 & 4 & 8 \\
+            0 & -1 & 0
+        \end{pmatrix}
+    \end{align*}
+
+    Lastly, we eliminate the -1 from the bottom row of $U$ by multiplying the middle row by $1/4$ and adding this to the bottom row. The multiplier $-1/4$ is recorded in $L$. 
+
+    \begin{align*}
+        L^{(3)} = \begin{pmatrix}
+            1 & 0 & 0 \\
+            \frac{2}{3} & 1 & 0 \\
+            -\frac{4}{3} & -\frac{1}{4} & 1
+        \end{pmatrix} &&
+        U^{(3)} = \begin{pmatrix}
+            3 & -6 & -3 \\
+            0 & 4 & 8 \\
+            0 & 0 & 2
+        \end{pmatrix}
+    \end{align*}   
+    
+    Now that we have $L$ and $U$ in lower and upper diagonal form, we can write our final LU factorization of the matrix $A$ as 
+
+    \begin{align*}
+        L = \begin{pmatrix}
+            1 & 0 & 0 \\
+            \frac{2}{3} & 1 & 0 \\
+            -\frac{4}{3} & -\frac{1}{4} & 1
+        \end{pmatrix} &&
+        U = \begin{pmatrix}
+            3 & -6 & -3 \\
+            0 & 4 & 8 \\
+            0 & 0 & 2
+        \end{pmatrix}
+    \end{align*}
+\end{solution}
+\end{document}

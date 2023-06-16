@@ -1,0 +1,332 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage{fullpage}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{bbm}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\title{{AMATH 562\\
+Advanced Stochastic Processes}\\
+{\bf \Huge Homework 4}}
+
+\author{Lucas Cassin Cruz Burke}
+
+\date{Due: February 21, 2023}
+
+\maketitle
+
+\begin{enumerate}
+    \item \textbf{Exercise 8.5} Let $X=(X_t)_{0 \le t \le T}$ be an OU process on a probability space $(\Omega, \mathcal F, \mathbb P)$
+    
+    $$dX_t = K(\theta - X_t)dt + \sigma dW_t$$
+
+    Where $W=(W_t)_{0 \le t \le T}$ is a Brownian motion under probability measure $\mathbb P$. Then we can define a new probability measure $\tilde{\mathbb P}$ such that the process $\tilde W = (\tilde W_t)_{0 \le t \le T}$ is a Brownian motion under $\tilde{\mathbb P}$. Then the OU process $X=(X_t)_{0\le t\le T}$ on the new probability space $(\Omega, \mathcal F, \tilde{\mathbb{P}})$ will be 
+
+    $$dX_t = K(\theta^* - X_t)dt + \sigma d\tilde W_t.$$
+
+    Find the Radon-Nikodym derivative $\frac{d \tilde{\mathbb P}}{d \mathbb P}$.
+
+    \textbf{Solution:} Since $\tilde W$ is a Brownian motion under $\tilde{\mathbb P}$, there must exist some $\mathbb F$-adapted $\Theta_t$ such that $d\tilde W_t = \Theta_t dt + dW_t$. Then we may write $dX_t$ as 
+
+    \begin{align*}
+        dX_t &= K(\theta^* - X_t) dt + \sigma d\tilde W_t \\
+        &= K(\theta^* - X_t)dt + \sigma (\Theta_t dt + dW_t) \\
+        &= (K\theta^* - KX_t + \sigma \Theta_t) dt + \sigma dW_t
+    \end{align*}
+
+    The drift term here must be equal to the drift term in the original definition of $dX_t$, which means that
+
+    \begin{align*}
+        K\theta dt = (K\theta^* + \sigma \Theta_t) dt && \Rightarrow && \Theta_t = \frac{K}{\sigma} (\theta - \theta^*)
+    \end{align*}
+
+    Then by Girsanov's theorem we may define a Radon-Nikodym derivative $Z= \frac{d\tilde{\mathbb P}}{d \mathbb P}$ given by
+
+    \begin{align*}
+        \frac{d\tilde{\mathbb P}}{d \mathbb P} &= \exp \left(- \int_0^T \frac{1}{2} \Theta_t^2 dt - \int_0^T \Theta_t dW_t \right)\\ 
+        &= \exp \left( - \frac{K^2}{2 \sigma^2}(\theta-\theta^*)^2 \int_0^T dt - \frac{K}{\sigma} (\theta-\theta^*) \int_0^T dW_t \right)\\
+        &= \exp \left( - \frac{K^2}{2 \sigma^2}(\theta-\theta^*)^2 T - \frac{K}{\sigma} (\theta-\theta^*) W_T \right)
+    \end{align*}
+
+    \item The Ornstein-Uhlenbeck process, defined by the time-homogeneous linear SDE 
+    
+    \begin{align*}
+        dX(t) = -\mu X(t)dt + \sigma dW(t) && X(0)=x_0
+    \end{align*}
+
+    in which $\sigma, \mu >0$ are two constants, has its Kolmogorov forward equation 
+
+    \begin{align}
+        \frac{\partial}{\partial t} \Gamma(x_0;t,x) = \frac{\sigma^2}{2} \frac{\partial^2}{\partial x^2} \Gamma(x_0; t,x) + \frac{\partial}{\partial x} \left( \mu x \Gamma(x_0; t,x) \right),
+    \end{align}
+
+    with the initial condition $\Gamma(x_0; 0,x) = \delta(x-x_0)$. 
+
+    \begin{enumerate}
+        \item Show that the solution to the linear PDE (1) has a Gaussian form and find the solution.
+
+        \textbf{Solution:} For some functions $g(t)$, $f(t)$ such that $g(t) > 0$ and $f(0)=x_0$, define 
+
+        \begin{align*}
+            \Gamma(x_0;t,x)=  \frac{1}{\sqrt{2 \pi g(t)}} \exp \left\{-\frac{(x-f(t))^2}{2 g(t)}\right\}
+        \end{align*}
+
+        Using Mathematica to evaluate the forward equation for this function, we find that for $\Gamma$ to satisfy (1) $f$ and $g$ must satisfy
+
+        \begin{align*}
+            0 = x^2 \left( \sigma^2 -g' -2\mu g \right) + x \left(-2gf' + 2fg\mu + g' - \sigma^2 \right)\\
+            + 2\mu g^2 + f^2(\sigma^2-g') + g(g'-\sigma^2) + 2ff'g 
+        \end{align*}
+
+        Since this must hold for all $x$, the coefficients of each power of $x$ must each individually cancel to zero. Therefore, for $\mathcal O (x^2)$ we have the following first order linear ODE for $g$.
+
+        \begin{align*}
+            \sigma^2 - g' - 2\mu g &= 0 &&  \Rightarrow && g = \frac{1}{2\mu}[\sigma^2 - e^{-2\mu t}]
+        \end{align*}
+
+        Plugging this expression in for $g(t)$ gives us a new expression for $\Gamma$. 
+
+        $$\Gamma(x_0;t,x) =  \sqrt{\frac{\mu}{\pi(\sigma^2-e^{-2\mu t})}} \exp\left(-\frac{\mu  (x-f(t))^2}{\sigma ^2-e^{-2 \mu  t}}\right)$$
+        
+        When we plug this new expression in to (1), we find that its solvability requires that $f$ satisfy the following linear first order ODE.
+
+        \begin{align*}
+            f'(t)+\mu  f(t) && \Rightarrow && f(t) = x_0 e^{-\mu t}
+        \end{align*}
+
+        Here we have used the initial condition $\Gamma(x_0; 0,x)=\delta(x-x_0)$. Having found both $f(t)$ and $g(t)$, we may write the full Gaussian solution to the OU process Kolmogorov forward equation as
+
+        $$\Gamma(x_0; t,x) = \sqrt{\frac{\mu}{\pi(\sigma^2-e^{-2\mu t})}} \exp \left(-\frac{\mu  \left(x-x_0 e^{-\mu t}\right)^2}{\sigma ^2-e^{-2 \mu  t}}\right)$$
+
+
+        \item What is the limit of $$\lim_{t\rightarrow \infty} \Gamma(x_0; t,x)?$$
+
+        \textbf{Solution:} As $t\rightarrow \infty$, the time-dependent exponential terms go to zero, and $\Gamma$ approaches $\mathcal N(0, \sigma^2/2\mu)$.
+
+        $$\lim_{t\rightarrow \infty} \Gamma(x_0;t,x) = \sqrt{\frac{\mu}{\pi \sigma^2}} \exp \left(- \frac{\mu x^2}{\sigma^2} \right)$$
+
+        \item Find $\mathbb E[X(t)]$ and $\mathbb V[X(t)]$.
+
+        \textbf{Solution:} Since $y$ is Gaussian distributed, we can read its expected value and variance directly from its equation. From part (a) we had
+
+        $$\Gamma(x_0; t,x) = \sqrt{\frac{\mu}{\pi(\sigma^2-e^{-2\mu t})}} \exp \left(-\frac{\mu  \left(x-x_0 e^{-\mu t}\right)^2}{\sigma ^2-e^{-2 \mu  t}}\right)$$
+
+        Hence we have
+
+        \begin{align*}
+            \mathbb E [X(t)] = x_0 e^{-\mu t} && \text{and} && \mathbb V[X(t)] = \frac{\sigma^2 - e^{-2\mu t}}{2 \mu}
+        \end{align*}
+
+        \item Note that $\mathbb E[X(t)]$ is the same as the solution to the ODE $\frac{dx}{dt} = -\mu x$, which is obtained when $\sigma=0$. Is this result true for a nonlinear SDE?
+
+        \textbf{Solution:} No this would in general not hold for a nonlinear SDE. To see this $\hat x(t) = \mathbb E[X(t)]$. If we write the linear SDE in integral form and take expectation, we have
+        
+        \begin{align*}
+            \mathbb E[X(t)] &= \mathbb E \left[ x_0 -\mu \int_0^t X(s) ds + \sigma \int_0^t dW(s) \right] \\
+            \Rightarrow \hat x(t) &= x_0 - \mu \int_0^t \hat x(s) ds
+        \end{align*}
+
+        We see that $\hat x(t)$ satisfies the ODE $d\hat x/dt=-\mu \hat x$. Now consider a new process $Y(t)$ which satisfies nonlinear SDE defined by
+
+        \begin{align*}
+            Y(t) = y_0 -\frac{1}{2} \mu \int_0^t Y^2(s) ds + \sigma \int_0^t dW(s) 
+        \end{align*}
+
+        Repeating the same steps as above results in
+
+        \begin{align*}
+            \mathbb E[Y(t)] &= \mathbb E \left[ y_0 - \frac{\mu}{2} \int_0^t Y^2(s) ds + \sigma \int_0^t dW(s) \right] \\
+            \Rightarrow \hat y(t) &= y_0 - \frac{\mu}{2} \int_0^t \mathbb E[Y^2(s)]ds \\
+            &\ne y_0 - \frac{\mu}{2} \int_0^t \hat y^2(s) ds
+        \end{align*}
+
+    \end{enumerate}
+
+    \item The time-independent solution to a Kolmogorov forward equation gives a stationary probability density function for the Itô process $dX_t = \mu (X_t)dt + \sigma(X_t)dW(t)$: 
+    
+    $$-\frac{\partial}{\partial x}\Big(\mu(x)f(x)\Big)+ \frac{1}{2}\frac{\partial^2}{\partial x^2}\Big(\sigma^2(x)f(x) \Big) = 0.$$
+
+    This is a linear, second-order ODE. We assume that both $\mu(x)$ and $\sigma(x)$ satisfy the conditions required to have a solution $f(x)$ on the entire $\mathbb R$. Find the expression for the general solution. There are two constants of integration, which should be determined according to appropriate probabilistic reasoning.
+
+    \textbf{Solution:} Since both left-hand side terms are derivatives, we can integrate once, picking up an integration constant $A$. 
+
+    \begin{align*}
+        -\mu(x) f(x) + \frac{1}{2}(\sigma^2(x)f(x))_x = A
+    \end{align*}
+    
+    Now let $g(x) = \frac{1}{2} \sigma^2(x) f(x)$, so that we may write 
+
+    \begin{align*}
+        -\frac{2\mu}{\sigma^2}g + g_x = A
+    \end{align*}
+
+    We now introduce the integrating factor $\phi = \phi(x)$, satisfying the following
+
+    \begin{align*}
+        \phi_x = \frac{-2\mu}{\sigma^2} \phi && \Rightarrow && \phi(x) = \exp \left\{ \int_{-\infty}^x \frac{-2\mu(\xi)}{\sigma(\xi)^2}d\xi \right\}
+    \end{align*}
+
+    Multiplying both sides of our equation by $\phi$ gives us
+
+    \begin{align*}
+        A \phi &= -\frac{2\mu}{\sigma^2} g\phi + g_x \phi \\
+        &= g \phi_x + g_x \phi = (g\phi)_x\\\\
+        \Rightarrow g(x) &= \frac{1}{\phi(x)} \left( A \int_{-\infty}^x \phi(\xi) d\xi +B \right) \\\\
+        \Rightarrow f(x) &= \frac{1}{\sigma^2(x)\phi(x)} \left( A \int_{-\infty}^x \phi(\xi) d\xi +B \right)
+    \end{align*}
+
+    For integrability, we require that $f(x) \rightarrow 0$ as $|x| \rightarrow \infty$. Additionally, since $f(x)$ is a density, we require that $\int_{\mathbb R} f(x)dx =1$. A simple way to achieve this is to let $A=0$ and set 
+
+    $$B = \left[ \int_{-\infty}^\infty \frac{dx}{\sigma^2(x) \phi(x)}\right]^{-1}$$
+
+    Then, provided that $\sigma^2(x)$ is unbounded as $|x|\rightarrow \infty$ and grows sufficiently quickly, $f(x)$ will satisfy the required integrability conditions.
+
+    \item \textbf{Exercise 9.3} For $i=1,2,\dots,n$, let $X^{(i)}$ satisfy
+
+    $$dX_t^{(i)} = -\frac{b}{2}X_t^{(i)}dt + \frac{1}{2} \sigma dW_t^{(i)},$$
+
+    where the $(W^{(i)})_{i=1}^n$ are independent Brownian motions. Define 
+
+    \begin{align*}
+        R_t := \sum_{i=1}^n (X_t^{(i)})^2, && B_t := \sum_{i=1}^n \int_0^t \frac{1}{\sqrt{R_s}} X_s^{(i)} dW_s^{(i)}.
+    \end{align*}
+
+    Show that $B$ is a Brownian motion. Derive an SDE for $R$ that involves only $dt$ and $dB_t$ terms (i.e., no $dW_t^{(i)}$ terms should appear).
+
+    \textbf{Solution:} To show that $B$ is a Brownian motion, we first note that $B_0=0$. Additionally, $B_t$ is a finite sum of stochastic integrals, and hence is both martingale and continuous. Lastly, since $B_t$ is a sum of Itô processes we may calculate the quadratic variation as 
+
+    \begin{align*}
+        d[B,B]_t &= \sum_{i=1}^n d\left( \int_0^t \frac{X_s^{(i)}}{\sqrt{R_s}}dW_s^{(i)} \right) \\
+        &= \sum_{i=1}^n \frac{\left(X_t^{(i)}\right)^2}{R_t} dt \\
+        &= \frac{1}{R_t} \sum_{i=1}^n (X_t^{(i)})^2 dt \\
+        &= dt
+    \end{align*}
+
+    Hence, by the Lévy characterization of Brownian motion, $B$ must be a Brownian motion.
+
+    To derive an SDE for $R$, we first note that since $X^{(i)}$ is an Itô process with diffusion term given by $\sigma_t^{ij} = \frac{\sigma}{2} \delta_{ij}$, where $\delta_{ij}$ is the Kronecker delta. Hence its quadratic variation can be calculated using Itô's formula to be
+
+    \begin{align*}
+        d[X^{(i)}, X^{(j)}]_t &= \sum_{k=1}^n \sigma_t^{ik} \sigma_t^{jk} dt \\
+        &= \frac{\sigma^2}{4} \sum_{k=1}^n \delta_{ik} \delta_{jk} dt\\
+        &= \frac{\sigma^2}{4} \delta_{ij} dt
+    \end{align*}
+
+    Using this result, we can use Itô's formula to calculate $dR_t$ as follows
+
+    \begin{align*}
+        dR_t &= \sum_{i=1}^n \frac{\partial R_t}{\partial x_i} dX_t^{(i)} + \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \frac{\partial^2 R_t}{\partial x_i \partial x_j} d[X^{(i)}, X^{(j)}]_t\\
+        &= \sum_{i=1}^n \frac{\partial R_t}{\partial x_i} dX_t^{(i)} + \frac{\sigma^2}{8} \sum_{i=1}^n \sum_{j=1}^n \frac{\partial^2 R_t}{\partial x_i \partial x_j} \delta_{ij} dt\\
+        &= \sum_{i=1}^n \frac{\partial R_t}{\partial x_i} dX_t^{(i)} + \frac{\sigma^2}{8} \sum_{i=1}^n \frac{\partial^2 R_t}{\partial x_i^2} dt
+    \end{align*}
+
+    Using the provided definition of $R_t$ to calculate the derivative terms, and writing out $X_t^{(i)}$ explicitely, results in
+
+    \begin{align*}
+        dR_t &= 2\sum_{i=1}^n X_t^{(i)}dX_t^{(i)} + \frac{\sigma^2}{4} \sum_{i=1}^n dt \\
+        &= \sum_{i=1}^n \Big[ \left( \frac{\sigma^2}{4}-b \left(X_t^{(i)}\right)^2 \right)dt + \sigma X_t^{(i)} dW_t^{(i)}  \Big] \\
+        &= \left(\frac{n\sigma^2}{4} - b R_t\right) dt + \sigma \sum_{i=1}^n X_t^{(i)}dW_t^{(i)}
+    \end{align*}
+
+    Lastly, we can use $dB_t^{(i)} = \frac{X_t^{(i)}}{\sqrt{R_t}}dW_t^{(i)} \Rightarrow dW_t^{(i)} = \frac{\sqrt{R_t}}{X_t^{(i)}}dB_t^{(i)}$ to write 
+
+    \begin{align*}
+        dR_t = \left(\frac{n\sigma^2}{4} - b R_t\right) dt + \sigma \sqrt{R_t} dB_t
+    \end{align*}
+
+    This is a SDE for $R_t$ in terms of $t$ and $B_t$. Note that we can also divide both sides by $2\sqrt{R_t}$ to find a SDE for $\sqrt{R_t}$ that has a constant diffusion term $\sigma/2$.
+
+
+    \item Consider a continuous-time $(n+1)$-state Markov process $X(t)$, $X \in \mathcal S = \{ 0,1,2,\dots, n \}$, with transition rates 
+    
+    \begin{align*}
+        g(i,j) = \frac{1}{dt} \mathbb P \{ X(t+dt) = j|X(t)=i\}, && j \ne i
+    \end{align*}
+
+    Let state $0$ be an absorbing state. E.g., all $g(0,j)=0$ for $1 \le j \le n$. Let $\tau_k$ be a hitting time: 
+
+    $$\tau_k := \inf \left\{ t \ge 0: X(t) = 0, X(0)=k \right\}.$$
+
+    \begin{enumerate}
+        \item Show that $$\sum_{1\le k \le n} g(j,k) \mathbb E[\tau_k] = -1$$
+
+        \textbf{Solution:} Note that since $\mathbf G = (g(i,j))_{i,j}$ is a generator, its entries $g(i,j)$ must satisfy 
+
+        \begin{align*}
+            g(i,i) \le 0 && \forall j \ne i: g(i,j) \ge 0 && \sum_j g(i,j)=0
+        \end{align*}
+
+        from which it follows that 
+
+        $$g(i,i) = - \sum_{j\ne i} g(i,j)$$
+
+        Next, we note that since $0$ is absorbing, $\tau_0 = 0$, and so we may write
+        
+        $$\sum_{1\le k \le n} g(j,k) \mathbb E[\tau_k] = \sum_{k \in \mathcal S} g(j,k) \mathbb E[\tau_k] $$
+        
+        Using these results, we can write our quantity of interest as
+
+        \begin{align*}
+            \sum_{1 \le k\le n} g(j,k) \mathbb E[\tau_k] &= g(j,j)\mathbb E[\tau_j] + \sum_{k \ne j} g(j,k) \mathbb E[\tau_k]\\
+            &= - \mathbb E[\tau_j] \sum_{k \ne j} g(j,k) + \sum_{k\ne j} g(j,k) \mathbb E[\tau_k] \\
+            &= \sum_{k \ne j} g(j,k)\left( \mathbb E [\tau_k] - \mathbb E[\tau_j] \right)\\
+            &=\sum_{k} g(j,k)\mathbb E [\tau_k-\tau_j]
+        \end{align*}
+
+        The last equality comes from linearity of expectation and from recognizing that for $k=j$ the summand will cancel to zero. Next, multiplying by by $dt$ gives us
+
+        \begin{align*}
+            \sum_{k} g(j,k) \mathbb E [\tau_k-\tau_j]dt &= \sum_{k}  \mathbb E [\tau_k-\tau_j] \mathbb P \left[X(t+dt) = k|X(t)=j \right] \\
+            &= \mathbb E[\mathbb E[\tau_{X(t+dt)}-\tau_{X(t)}]|X(t)=j] \\
+            &= \mathbb E[\tau_{X(t+dt)}-\tau_{X(t)}|X(t)=j] \\
+            &= \mathbb E[d\tau|X(t)=j] \\&= -dt
+        \end{align*}
+
+        We see that this quantity is equivalent to the expected infinitesimal change in the hitting time $\tau$ following the passage of time $dt$. Regardless of starting state, in the expected hitting time must decrease in proportion with $dt$. Hence, dividing by $dt$, we find the equality which we wanted to show.
+
+        $$\sum_{1 \le k \le n} g(j,k) \mathbb E [\tau_k]=-1$$
+
+        \item Derive a system of equations relating $\mathbb E[\tau_k^2]$ to $\mathbb E[\tau_j]$, for $1 \le j,k \le n$. 
+
+        \textbf{Solution:} Let us define $\mathbf u(\lambda) \in \mathbb R^{n-1}$ by $[\mathbf u(\lambda)]_k = u_k(\lambda)$ where $u_k(\lambda)$ is the Laplace transform of $\tau_k$, defined by
+
+        \begin{align*}
+            u_k(\lambda) =  \mathbb E \left[ e^{-\lambda \tau} |X(0)=k \right] = \mathbb E [e^{-\lambda \tau_k}] && k \ge 1
+        \end{align*}
+
+        We note that $u_k'(0)=-\mathbb E[\tau_k]$ and that $u_k''(0) = \mathbb E[\tau_k^2]$. Furthermore, from Lorig Corollary 9.4.2. we know that $\mathbf u(\lambda)$ satisfies 
+
+        \begin{align*}
+            (\mathbf G - \lambda) \mathbf u = 0 && \Rightarrow && \sum_{k} g(j,k) u_k(\lambda) = \lambda u_j(\lambda)
+        \end{align*}
+
+        Differentiating this equation twice with respect to $\lambda$, we find 
+
+        \begin{align*}
+            \frac{d^2}{d\lambda^2}\sum_k g(j,k) u_k(\lambda) &= \frac{d^2}{d\lambda^2} \lambda u_j(\lambda) \\
+            \Rightarrow \frac{d}{d\lambda} \sum_k g(j,k) u_k'(\lambda) &= \frac{d}{d\lambda} (u_j(\lambda) + \lambda u_j'(\lambda))\\
+            \Rightarrow \sum_k g(j,k) u_k''(\lambda) &= 2 u_j'(\lambda) + \lambda u_j''(\lambda)
+        \end{align*}
+
+        Lastly, we evaluate this expression at $\lambda=0$ and use the relationships above to write
+
+        \begin{align*}
+            \mathbb E[\tau_j] = -\frac{1}{2} \sum_k g(j,k)\mathbb E[\tau_k^2] 
+        \end{align*}
+
+        \item Now if both states $0$ and $n$ are absorbing, let $u_k$ be the probability of $X(t)$, starting with $X(0)=k$, being absorbed into state $0$ and $1-u_k$ be the probability of it being absorbed into state $n$. Derive a system of equations for $u_k$.
+
+        \textbf{Solution:} Let $p_t(i,j) = \mathbb P [X_{s+t}=j|X_t=i]$, then it is clear that
+
+        $$u_k = \lim_{t \rightarrow \infty} p_t(k,0) = \lim_{t\rightarrow \infty} \left(e^{t \mathbf G} \right)_{k,0}$$
+    \end{enumerate}
+
+\end{enumerate}
+\end{document}

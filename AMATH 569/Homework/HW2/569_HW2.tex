@@ -1,0 +1,233 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+
+% Page layout
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Lucas Cassin Cruz Burke}
+\rhead{AMATH 569}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
+
+% Theorem environments
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\theoremstyle{remark}
+\newtheorem*{solution}{Solution}
+
+\title{AMATH 569 Homework 2}
+\author{Lucas Cassin Cruz Burke}
+\date{April 19, 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{problem}
+    Consider the wave equation: 
+    
+    $$c^2 u_{xx} - u_{tt} = 0,$$ 
+
+    which is a special case of the general quasi-linear equation:
+
+    $$au_{xx} + 2bu_{xy} + cu_{yy}=f$$
+
+    with $y=t$. 
+
+    Find the slope of each of the two characteristics:
+
+    \begin{align*}
+        \frac{dy}{dx} = -z_1 && \text{along } \alpha = \text{const.} \text{ charactersitic} \\
+        \frac{dy}{dx} = -z_2 && \text{along } \beta = \text{const.} \text{ charactersitic}
+    \end{align*}
+
+    Find the expression in terms of $x$ and $t$ for $\alpha$ and $\beta$, so that the wave equation simplifies to $$u_{\alpha \beta} = 0$$
+\end{problem}
+\begin{solution}
+    In order to express the wave equation in the canonical form $u_{\alpha \beta}=0$ we need $\alpha$ and $\beta$ to satisfy
+
+    \begin{align*}
+        a \varphi_x^2 + 2b \varphi_x\varphi_t + c \varphi_t^2 = 0 && \Rightarrow && a \left( \frac{\varphi_x}{\varphi_t} \right)^2 + 2b \frac{\varphi_x}{\varphi_t} + c = 0 
+    \end{align*}
+
+    Plugging in $a=c^2$ and $c=-1$, we find the relevant quadratic to be 
+
+    $$c^2 z^2 -1 =0$$
+
+    where $z= \varphi_x/\varphi_t$. This has roots at $z_1 = 1/c$ and $z_2=-1/c$. Since the roots are real and distinct the equation is hyperbolic. Now let 
+
+    \begin{align*}
+        \alpha_x = z_1 \alpha_t = \alpha_t/c && \beta_x = z_2 \beta_t = -\beta_t/c
+    \end{align*}
+
+    These are first order differential equations whose solutions give the new coordinates $\alpha$ and $\beta$ as functions of the old ones $x$ and $t$. The solutions are:
+
+    \begin{align*}
+    \alpha = x+ct && \text{ and } && \beta = x-ct
+    \end{align*}
+    
+    Therefore, the characteristic slopes are $\frac{dy}{dx} = -z_1 = -1/c$ along $\alpha = \text{const.}$ and $\frac{dy}{dx} = -z_2 = 1/c$ along $\beta = \text{const.}$
+    
+    In these new coordinates $(\alpha, \beta)$, the wave equation simplifies to $u_{\alpha \beta} = 0$. 
+\end{solution}
+
+\begin{problem}
+    Use the Fourier transform method to solve the 2D Laplace equation in the upper plane for the bounded solution 
+
+    \begin{align*}
+        \nabla^2 u = 0, && y \in \mathbb R^+ \text{ and } x \in \mathbb R \\
+        u(x,0) = f(x), && x \in \mathbb R
+    \end{align*}
+
+    Assume $f(x)$ is of compact support and $u(x,y) \rightarrow 0$ as $ |x| \rightarrow \infty$. 
+\end{problem}
+\begin{solution}
+    We begin by Fourier transforming $u(x,y)$. 
+
+    \begin{align*}
+        \hat u(k, y) = \mathcal F [u] = \int_{-\infty}^\infty e^{i k x} u(x, y) dx 
+    \end{align*}
+
+    wherefore 
+
+    $$u(x,y) = \mathcal F^{-1}[\hat u]= \frac{1}{2\pi} \int_{-\infty}^\infty e^{-ikx} \hat u(k,y) dk$$
+
+    Then, using the well-known properties of the Fourier transform under the assumption that $u(x,y) \rightarrow 0$ as $|x| \rightarrow \infty$, we have 
+
+    \begin{align*}
+        \mathcal F \big[ \nabla^2 u \big] = \mathcal F \left[\left(\frac{\partial^2}{\partial y^2} + \frac{\partial^2}{\partial x^2}\right) u\right] = \hat u_{yy} - k^2 \hat u &= 0 \\
+        \Rightarrow \hat u_{yy} &= k^2 \hat u
+    \end{align*}
+
+    We have reduced our second order PDE to a second order ODE, whose well-known solutions are given by 
+
+    \begin{align*}
+        \hat u (k, y) = c_1(k) e^{ky} + c_2(k) e^{-ky}
+    \end{align*}
+
+    Since we seek a bounded solution we discard the first term to give us 
+
+    $$\hat u(k, y) = c(k) e^{-ky}$$
+
+    We now apply our boundary condition at $y=0$. We have
+
+    \begin{align*}
+        u(x,0) &= f(x) \\
+        \Rightarrow \mathcal F[u(x,0)] &= \mathcal F[f(x)] \\
+        \hat u (k, 0) = c(k) &=\mathcal F[f(x)] = F(k)
+    \end{align*}
+
+    Having found this expression for $c(k)$, we may write the Fourier transform $\hat u$ as
+
+    $$\hat u(k,y) = F(k) e^{-ky}$$
+
+    Hence our solution is given by the inverse Fourier transform of this,
+
+    \begin{align*}
+        u(x,y) &= \frac{1}{2\pi} \int_{-\infty}^\infty F(k) e^{-ikx} e^{-ky} dk
+    \end{align*}
+\end{solution}
+
+\begin{problem}
+    Solve the following problem in two ways: 
+    \begin{align*}
+        u_t = u_{xx} && t \in \mathbb R^+ \text{ and } x \in \mathbb R^+\\
+        u(x,0) = 0 && u(x,t) \text{ bounded as } x \rightarrow \infty && \forall t > 0:  u(0,t) = T_0 
+    \end{align*}
+
+    \begin{enumerate}
+        \item by the method of similarity transformation. Look for the value of $\alpha$ such that the PDE reduces to an ODE in $\eta$, $\eta=x/t^{\alpha}$.
+        \begin{solution}
+            We have $\eta = x/t^{\alpha}$. Therefore by the chain rule our differential operators can be written in terms of $\eta$ as 
+
+            \begin{align*}
+                \frac{\partial}{\partial x} \mapsto \frac{\partial \eta}{\partial x}\frac{\partial}{\partial \eta} = t^{-\alpha} \frac{\partial}{\partial \eta} && \frac{\partial}{\partial t} \mapsto \frac{\partial \eta}{\partial t}\frac{\partial}{\partial \eta} = -\alpha x t^{-\alpha -1} \frac{\partial}{\partial \eta}
+            \end{align*}
+
+            Now let $v(\eta(x,t)) = u(x,t)$. Under our similarity transformation, our PDE becomes 
+
+            \begin{align*}
+                u_t - u_{xx} = 0 && \Rightarrow && -\alpha x t^{-\alpha -1} v_\eta - t^{-2\alpha} v_{\eta\eta}=0
+            \end{align*}
+
+            We now multiply both sides by $xt^{\alpha}$ to get 
+
+            $$-\alpha x^2 t^{-1} v_\eta - xt^{-\alpha} v_{\eta\eta}=0$$
+
+            From here we can see that for $\alpha = 1/2$ we have $\eta = x/\sqrt t$ and our equation can be reduced to an ODE in $\eta$.
+
+            \begin{align*}
+                -\frac{1}{2} \frac{x^2}{t} v_\eta - \frac{x}{\sqrt{t}} v_{\eta\eta} &= 0 \\
+                \Rightarrow -\frac{1}{2} \eta^2 v_\eta - \eta v_{\eta\eta}=0
+            \end{align*}
+
+            To solve this ODE we start by dividing both sides by $\eta$ which is valid since $x,t \ne 0$ by our problem statement. We have a second order ODE in $\eta$ which is first order and separable in terms of $v_\eta$. 
+
+            \begin{align*}
+                v_{\eta\eta} = -\frac{1}{2} \eta v_\eta && \Rightarrow && v_\eta = c_1 \exp \left\{ -\frac{\eta^2}{4} \right\}
+            \end{align*}
+
+            We now integrate once more to find our solution $v(\eta)$ to be 
+
+            \begin{align*}
+                v = c_1 \operatorname{erf}\left( \frac{\eta}{2} \right) + c_2 = c_1 \operatorname{erf} \left( \frac{x}{2\sqrt t} \right) + c_2
+            \end{align*}
+
+            where $\operatorname{erf}(z) = \frac{2}{\sqrt \pi}\int_0^z e^{-t^2}dt$ is the Gaussian error function. Having found the form of our solution, we revert back to $u(x,t)$. 
+            
+            $$u(x,t) = c_1 \operatorname{erf} \left( \frac{x}{2\sqrt t} \right) + c_2$$
+
+            From our problem statement we have $u(0,t)= T_0$ for all $t>0$, and hence 
+            
+            $$u(0,t) = c_1 \operatorname{erf}(0) + c_2 = c_2 = T_0$$
+
+            We also have that $u(x,0)=0$, which implies that $v(\eta) \rightarrow 0$ as $t \rightarrow 0$, and so 
+
+            $$\lim_{t\rightarrow 0^+} u(x,t) = \lim_{t\rightarrow 0^+} c_1 \operatorname{erf}\left( \frac{x}{2\sqrt t}\right) + T_0 = c_1 + T_0 = 0$$
+
+            From which it follows that $c_1 = -T_0$. Putting these together, we find our full solution to be 
+
+            $$u(x,t) = T_0 \left(1 - \operatorname{erf}\left\{ \frac{x}{2\sqrt t} \right\} \right)$$
+
+        \end{solution}
+
+        \item by an integral transform in $t$, in this case a Laplace transform. 
+        \begin{solution}
+            Let $\hat u(x,s) = \mathcal L [u(x,t)]$ be the Laplace transform of the solution $u(x,t)$. Taking the Laplace transform of both sides of the PDE, we have 
+
+            \begin{align*}
+                \mathcal L [u_t] &= \mathcal L [u_{xx}] \\
+                s \hat u(x,s) - u(x,0) &= \hat u_{xx}(x,s) \\
+                \Rightarrow s \hat u &= \hat u_{xx}
+            \end{align*}
+
+            We have reduced our equation to a second order ODE in the $x$ variable, whose solution is given by 
+
+            $$\hat u(x, s) = c_1 \exp \left\{ \sqrt s x\right\} + c_2 \exp \left\{-\sqrt s x\right\}$$
+
+            Since $u(x,t)$ is bounded as $x \rightarrow \infty$, we can discard the unbounded term, leaving us with 
+
+            $$\hat u(x,s) = c_2 \exp \left\{ -\sqrt s x\right\}$$
+
+            To find $c_2$, we use the boundary condition $u(0,t) = T_0$ for all $t > 0$, which after Laplace transform gives $\hat u(0,s) =c_2= T_0/s$. Hence our solution in the Laplace domain is given by 
+            
+            $$\hat u (x,s) = \frac{T_0}{s} \exp \left\{ -\sqrt s x\right\}$$
+
+            We apply the inverse Laplace transform and find the solution to be 
+
+            $$u(x,t) = T_0\left(1- \operatorname{erf}\left\{ \frac{x}{2\sqrt t} \right\} \right)$$
+
+            which agrees with the result we obtained using the similarity transformation method. 
+        \end{solution}
+    \end{enumerate}
+\end{problem}
+
+
+
+\end{document}

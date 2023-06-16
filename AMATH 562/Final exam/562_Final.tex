@@ -1,0 +1,615 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage{fullpage}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{bbm}
+\usepackage{dsfont}
+\usepackage{tikz-cd}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\title{{AMATH 562\\
+Advanced Stochastic Processes}\\
+{\bf \Huge Final Exam}}
+
+\author{Lucas Cassin Cruz Burke}
+
+\date{Due: March 16, 2023}
+
+\maketitle
+
+\begin{enumerate}
+    \item $W_t$ is a standard Brownian motion. 
+    
+    \begin{enumerate}
+        \item Find the probability density of $W_t^2$. 
+        
+        \textbf{Solution:} We need to find $f_{W_t^2} (x) dx = \mathbb P \left[ W_t^2 \in [x,x+dx] \right]$. Clearly $f_{W_t^2} (x)=0$ for $x<0$. For $x \ge 0$ we have
+
+        \begin{align*}
+            f_{W_t^2} (x) dx &= \mathbb P \left[ W_t^2 \in [x,x+dx] \right] \\
+            &= \mathbb P \left[ W_t \in [-\sqrt x-d\sqrt x]\cup [\sqrt x + d \sqrt x] \right]\\
+            &= f_{W_t}(\sqrt x) d\sqrt x + f_{W_t}(-\sqrt x)d\sqrt x \\
+            &= \frac{2}{\sqrt{2 \pi t}} \exp \left\{ - \frac{x}{2t} \right\} \frac{dx}{\sqrt{x}} \\
+            &= \sqrt{\frac{2}{\pi t x}} \exp \left\{ - \frac{x}{2t} \right\}dx
+        \end{align*}
+
+        where we have used $f_{W_t}(x) = \mathcal N(0,t)$. Hence, we find the probability density of $W_t^2$ to be 
+        \begin{align*}
+            f_{W_t^2}(x) = \begin{dcases}
+                \sqrt{\frac{2}{\pi t x}} \exp \left\{ - \frac{x}{2t} \right\} & x > 0 \\
+                0 & x <0
+            \end{dcases}
+        \end{align*}
+
+        \item Evaluate the expectation $$\mathbb E \left[ \left( \int_0^T W_t^2 dW_t \right)^2 \right]$$
+
+        \textbf{Solution:} Let $I_T := \int_0^T W_t^2 dW_t$. We note that
+
+        $$\mathbb E \left[ \left( \int_0^T W_t^2 dW_t \right)^2 \right] = \mathbb EI_T^2$$
+        
+        Since $I_T$ is an Itô integral, it satifies Itô isometry, which means
+
+        \begin{align*}
+            \mathbb E I_T^2 &= \mathbb E \int_0^T W_t^2 dt \\
+            &= \int_0^T \mathbb E W_t^2 dt
+        \end{align*}
+
+        We can use the probability density of $W_t^2$ found in (a) to evaluate the expectation term. Letting $\xi = \sqrt x$, we have 
+
+        \begin{align*}
+            \mathbb E W_t^2 &= \int_{-\infty}^\infty x f_{W_t^2}(x) dx \\
+            &= \int_0^\infty \sqrt{\frac{2 x}{\pi t}} \exp \left\{ - \frac{x}{2t} \right\}dx \\
+            &= \sqrt{\frac{2}{\pi t}} \int_0^\infty  \xi \exp\left\{ - \frac{\xi^2}{2t} \right\}d\xi \\
+            &= -\sqrt{\frac{2t}{\pi}} \exp\left\{ - \frac{\xi^2}{2t} \right\} \Bigg|_{\xi=0}^\infty \\
+            &= \sqrt{\frac{2t}{\pi}}
+        \end{align*}
+
+        Plugging this into the above gives us our answer
+
+        \begin{align*}
+            \mathbb E I_T^2 &= \int_0^T \mathbb E W_t^2 dt \\
+            &= \sqrt{\frac{2}{\pi}}\int_0^T \sqrt t dt \\
+            &= \frac{2}{3}\sqrt{\frac{2}{\pi}} T^{\frac{3}{2}}
+        \end{align*}
+
+        \item Show that $W_t^3-3tW_t$ is a Martingale.
+
+        \textbf{Solution:} To determine whether $W_t^3-3tW_t$ is martingale we must compute $$\mathbb E \left[ W_{t+s}^3 - 3(t+s) W_{t+s} \Big| W_t \right]$$ 
+        
+        We use the linearity of the expectation operator and the fact that Brownian motion is martingale to write
+
+        \begin{align*}
+            \mathbb E \left[ W_{t+s}^3 - 3(t+s) W_{t+s} \Big| W_t \right] &= \mathbb E \left[ W_{t+s}^3 \Big| W_t \right] - 3(t+s) \mathbb E \left[ W_{t+s} \Big| W_t \right] \\
+            &= \mathbb E \left[ W_{t+s}^3 \Big| W_t \right] -3(t+s)W_t
+        \end{align*}
+
+        To compute the expectation of $W_{t+s}^3$ we can use the fact that Brownian motion increments are normally distributed, that is, $W_{t+s} \sim \mathcal N(W_t, s)$. Hence, we have 
+
+        \begin{align*}
+            \mathbb E\left[W_{t+s}^3 \Big| W_t \right] &= \frac{1}{\sqrt{2 \pi s}}\int_{-\infty}^\infty x^3 \exp \left\{-\frac{(x-W_t)^2}{2s}\right\} dx
+        \end{align*}
+
+        We now make the variable substitution $\xi = x-W_t$ to write 
+
+        \begin{align*}
+            \mathbb E\left[W_{t+s}^3 \Big| W_t \right] &= \frac{1}{\sqrt{2 \pi s}}\int_{-\infty}^\infty (\xi+W_t)^3 \exp \left\{-\frac{\xi^2}{2s}\right\} d\xi\\
+            &= \frac{1}{\sqrt{2 \pi s}}\int_{-\infty}^\infty \left(\xi^3 + 3\xi^2 W_t + 3\xi W_t^2 + W_t^3\right) \exp \left\{-\frac{\xi^2}{2s}\right\} d\xi \\
+            &= \frac{1}{\sqrt{2 \pi s}}\int_{-\infty}^\infty \left( 3\xi^2 W_t + W_t^3\right) \exp \left\{-\frac{\xi^2}{2s}\right\} d\xi \\
+            &= \frac{1}{\sqrt{2\pi s}} \left[ 3W_t \int_{-\infty}^\infty \xi^2 \exp \left\{-\frac{\xi^2}{2s}\right\} d\xi + W_t^3 \int_{-\infty}^\infty \exp \left\{-\frac{\xi^2}{2s}\right\} d\xi \right]\\
+            &= 3W_t s + W_t^3
+        \end{align*}
+
+        Plugging this back in to the calculation above gives us 
+
+        \begin{align*}
+            \mathbb E \left[ W_{t+s}^3 - 3(t+s) W_{t+s} \Big| W_t \right] &= 3W_t s+W_t^3 - 3(t+s)W_t\\
+            &= W_t^3 - 3tW_t
+        \end{align*}
+
+        We conclude that $W_t^3 - 3tW_t$ is a martingale. 
+
+        \item Use Ito's formula to write the following stochastic process $$X_t = e^{W_t}+t+2$$
+        into the standard form $$dX_t = \mu(t,\omega)dt+\sigma(t,\omega)dW_t$$
+
+        \textbf{Solution:} To use Itô's formula we consider $X_t$ as a function of $t$ and the Brownian motion $W_t$: 
+
+        $$X_t = f(t, W_t) = e^{W_t}+t+2$$
+
+        Since $f \in C^2(\mathbb R^2)$ we may use Itô's formula in two dimensions to compute $df(t,W_t)$ as 
+
+        \begin{align*}
+            df(t, W_t) &= \frac{\partial f}{\partial t} dt + \frac{\partial f}{\partial W_t} dW_t + \frac{1}{2} \frac{\partial^2 f}{\partial W_t^2}dt \\
+            &= \left(1 + \frac{1}{2} e^{W_t} \right)dt + e^{W_t}dW_t
+        \end{align*}
+
+        Hence we may write $X_t$ in standard differential form as 
+
+        \begin{align*}
+            dX_t = \left(1 + \frac{1}{2} e^{W_t} \right)dt + e^{W_t}dW_t
+        \end{align*}
+
+        with the initial condition $X_0=3$. 
+
+    \end{enumerate}
+
+    \item The concept of \textit{change of measure} in terms of a Radon-Nikodym derivative can be summarized by the following diagram:
+    
+    \begin{center}
+        \begin{tikzcd}[sep=large]
+            {(\Omega, \mathcal F, \mathbb P)} \arrow[rr, "X(\omega)"] \arrow[dd, "\frac{d\tilde{\mathbb P}}{d\mathbb P}(\omega)"'] & & f_X(x) \arrow[dd] \\
+            & & \\
+            {(\Omega, \mathcal F, \tilde{\mathbb P})} \arrow[rr, "X(\omega)"] & & \tilde f_X(x)
+        \end{tikzcd}
+    \end{center}
+
+    \begin{enumerate}
+        \item Assuming that in the diagram, both probability density functions $f_X(x)$ and $\tilde f_X(x)$ for a random variable $X(\omega)$ are given. Find the RND $\frac{d\tilde{\mathbb P}}{d\mathbb P}(\omega)$ in terms of the $X(\omega)$. 
+        
+        \textbf{Solution:} The RND represents the relative change in probability of observing a particular event $\omega$. Hence the distributions $f_X(x)$ and $\tilde f_X(x)$ of a random variable $X(\omega)$, we can compute the RND, relative to the distribution of $X$, by looking at the relative change in probability of observing the value $X(\omega)$. Hence, we have
+
+        \begin{align*}
+            \frac{d \tilde{\mathbb P}}{d\mathbb P}(\omega) = \frac{\tilde f_X(X(\omega))}{f_X(X(\omega))}
+        \end{align*}
+
+        \item In the diagram below, $X: \Omega \rightarrow \mathbb R$ is a random variable with a smooth probability density function. A smooth function $g(x): \mathbb R \rightarrow \mathbb R$ represents the RND $$g(X(\omega)) = \frac{d\tilde{\mathbb P}}{d\mathbb P}(\omega).$$
+        Let us consider a random variable $Y(\omega) = h^{-1}(X(\omega))$, or $X(\omega) = h(Y(\omega))$, where $h(x) : \mathbb R \rightarrow \mathbb R$ is a monotonic and smooth function on $\mathbb R$ and $h^{-1}$ is its inverse function. If the random variable $Y(\omega)$ under the new measure $\tilde{\mathbb P}$ has a probability density function $$\tilde f_Y(x) = f_X(x),$$
+        find the function $h(y)$. 
+
+        \begin{center}
+            \begin{tikzcd}[sep=large]
+                {(\Omega, \mathcal F, \mathbb P)} \arrow[rr, "X(\omega)"] \arrow[dd, "{\frac{d\tilde{\mathbb P}}{d\mathbb P}(\omega)=g[X(\omega)]}"'] & & f_X(x) \arrow[dd] \\
+                & & \\
+                {(\Omega, \mathcal F, \tilde{\mathbb P})} \arrow[rr, "X(\omega)"] \arrow[rruu, "Y(\omega)"] & & \tilde f_X(x)
+            \end{tikzcd}
+        \end{center}
+
+        \textbf{Solution:} Let $F_Y(y)$ denote the cumulative distribution function of $Y(\omega)$ under $\mathbb P$, and define $x=h(y)$. Then by the monotonicity of $h$, we have
+
+        \begin{align*}
+            F_Y(y) &= \mathbb P[Y<y]\\
+            &= \mathbb P[h(Y)<h(y)]\\
+            &= \mathbb P[X < x] \\
+            &= \int_{-\infty}^{x} f_X(\xi) d\xi
+        \end{align*}
+
+        Hence, by the definition of the probability density function we have
+
+        \begin{align*}
+            f_Y(y) &= \frac{d}{dy} F_Y(y)\\
+            &= \frac{d}{dy} \int_{-\infty}^{x} f_X(\xi)d\xi \\
+            &= \frac{dx}{dy} \frac{d}{dx}\int_{-\infty}^{x} f_X(\xi)d\xi \\
+            &= \frac{dx}{dy} f_X(x)\\
+            &= |h'(y)| f_X(h(y))
+        \end{align*}
+
+        Note that we use the absolute value of $h'(y)$ to ensure that $f_Y(y)$ is non-negative. 
+        
+        Using the above derivation, along with $\tilde f_Y(y) = g(h(y))f_Y(y)$ and the condition that $\tilde f_Y(x) = f_X(x)$, we can write 
+
+        \begin{align*}
+            \tilde f_Y(x) &= f_X(x) \\
+            g(h(x))|h'(x)|f_X(h(x)) &= f_X(x) \\
+            \Rightarrow \int_{-\infty}^{h(x)} g(h)f_X(h) dh &= \pm \int_{-\infty}^x f_X(x)dx \\
+            \tilde F_X(h(x)) &= F_X(x)
+        \end{align*}
+
+        ...which didn't really get us anywhere. Except I suppose since $F_X$ and $\tilde F_X$ are cumulative distribution functions, and therefore monotonic, they are invertible whenever $f_X(x) \ne 0$, hence we can define
+
+        \begin{align*}
+            h(x) = \tilde F_X^{-1} F_X(x) && \text{ when } f_X(x) \ne 0
+        \end{align*}
+
+        \item Now consider a probability space $(\Omega, \mathcal F, \mathbb P)$, and let $X(\omega) = (X_1, X_2, \dots, X_n)(\omega)$ be an $n$-dimensional random variable with successive differences $X_j-X_{j-1}$ which are all conditionally, normally distributed independent random variables: $$X_{j+1}-X_j \sim \mathcal N\left( \mu_{j+1}(X_j), \sigma_{j+1}^2(X_j) \right).$$
+        Find the change of measure $Z(\omega) = \frac{d \tilde{\mathbb P}}{d \mathbb P}(\omega)$ such that under the new measure $\tilde{\mathbb P}$, $$X_{j+1}-X_j \sim \mathcal N\left(0, \sigma_{j+1}^2(X_j)\right)$$
+
+        \textbf{Solution:} Let $X$ be the sample path of some Itô process $Y_t$ sampled at $t \in [t_1\dots t_n]$, defined by
+
+        \begin{align*}
+            dY_t = \mu_t(Y_t)dt + \sigma_t(Y_t)dW_t && Y_{t_j} = X_j
+        \end{align*}
+
+        Girsanov's theorem (Lorig 10.4.2.) states that under the change of measure defined by 
+
+        $$\hat Z(\omega) = \frac{d \hat{\mathbb P}}{d \mathbb P}(\omega) = \exp \left\{-\frac{1}{2}\int_{t_1}^{t_n}  \frac{\mu_t^2(Y_t)}{\sigma_t^2(Y_t)}dt - \int_{t_1}^{t_n} \frac{\mu_t(Y_t)}{\sigma_t(Y_t)}dW_t \right\}$$
+
+        $Y_t$ is martingale on the interval $[t_1, t_n]$. Since $Y_t$ is martingale, its sample path $X_j$ must also be martingale. Note that since the actual values of $t_j$ are arbitrary, we are free to make the time differences $\Delta t_j = t_{j+1}-t_j$ as small as we like. In the limit $\Delta t_j \rightarrow 0$ the following limits hold:
+
+        \begin{align*}
+            \lim_{\Delta t_j \rightarrow 0} \int_{t_j}^{t_{j+1}} \frac{\mu_t^2(Y_t)}{\sigma_t^2(Y_t)}dt &= \frac{\mu_{j+1}^2(X_j)}{\sigma_{j+1}^2(X_j)} \Delta t_j \\
+            \lim_{\Delta t_j \rightarrow 0} \int_{t_j}^{t_{j+1}} \frac{\mu_t(Y_t)}{\sigma_t(Y_t)}dW_t &= \frac{\mu_{j+1}(X_j)}{\sigma_{j+1}(X_j)} \Delta W_{t_j}
+        \end{align*}
+
+        Using that the quadratic variation of Brownian motion is $t$, i.e. $dW_t^2 \sim dt$, we also have the following limit
+
+        \begin{align*}
+            \lim_{\Delta t_j \rightarrow 0} \Delta W_{t_j} \gg \Delta t_j \Rightarrow \lim_{\Delta t_j \rightarrow 0} \Delta Y_{t_j} = \sigma(Y_{t_j})\Delta W_{t_j}
+        \end{align*}
+
+        Hence, in the $\Delta t_j \ll 1$ limit, we can approximate $\Delta W_{t_j}$ by 
+        
+        $$\Delta W_{t_j} \approx \frac{\Delta Y_{t_j}}{\sigma_{t_j}(Y_{t_j})} = \frac{X_{j+1}-X_j}{\sigma_{j+1}(X_j)}$$
+
+        Putting all of these together, we discretize $\hat Z$ and define
+
+        \begin{align*}
+            Z(\omega) = \frac{d \tilde{\mathbb P}}{d \mathbb P}(\omega) = \exp \left\{ -\frac{1}{2} \sum_{j=1}^n \frac{\mu_{j+1}^2(X_j)}{\sigma_{j+1}^2(X_j)} - \sum_{j=1}^n \frac{\mu_{j+1}(X_j)}{\sigma_{j+1}^2(X_j)} (X_{j+1}-X_j)\right\}
+        \end{align*}
+
+        \item What is the conditional expectation $$\mathbb E[Z|X_1, \dots, X_k]$$
+        for $k<n$?
+
+        \textbf{Solution:} To begin, we can pull out the $Z$ terms containing $X_1, \dots, X_k$ from the expectation, leaving us with
+
+        \begin{align*}
+            \mathbb E[Z| X_1, \dots, X_k] &= \mathbb E \left[\exp \left\{ -\frac{1}{2} \sum_{j=1}^n \frac{\mu_{j+1}^2(X_j)}{\sigma_{j+1}^2(X_j)} - \sum_{j=1}^n \frac{\mu_{j+1}(X_j)}{\sigma_{j+1}^2(X_j)} \Delta X_j\right\} \Bigg| X_1, \dots, X_k \right]\\
+            &= \exp \left\{ -\frac{1}{2} \sum_{j=1}^k \frac{\mu_{j+1}^2(X_j)}{\sigma_{j+1}^2(X_j)} - \sum_{j=1}^k \frac{\mu_{j+1}(X_j)}{\sigma_{j+1}^2(X_j)} \Delta X_j\right\}\\
+            &\quad \times \mathbb E \left[\exp \left\{ -\frac{1}{2} \sum_{j=k+1}^n \frac{\mu_{j+1}^2(X_j)}{\sigma_{j+1}^2(X_j)} - \sum_{j=k+1}^n \frac{\mu_{j+1}(X_j)}{\sigma_{j+1}^2(X_j)} \Delta X_j\right\} \right]
+        \end{align*}
+
+        Focusing now on the expectation part, we note that since the increments are independent and normally distributed, we could probably do something with the moment generating function to simplify this further, but alas, no time!
+
+    \end{enumerate}
+
+    \item Let $(X,Y)(t)$ be an Ito process in $\mathbb R^2$ which is a solution to the SDE $$\begin{dcases} dX(t) = \mu(t,X,Y)dt + \sigma^2(t,X,Y)dW(t) \\ dY(t) = \theta(t,X,Y)dt \end{dcases}$$
+    
+    in which $\mu, \sigma$, and $\theta$ are all continuous functions. Find the first and second variations of $Y(t)$.
+
+    \textbf{Solution:} $Y(t)$ is a non-diffusive pure drift process with a continuous derivative $Y'(t) = \theta(t)$. Hence, by the mean value theorem its first variation must be equal to 
+
+    $$\operatorname{FV}_T(Y) = \int_0^T |Y'(t)|dt=\int_0^T |\theta(t, X(t), Y(t))|dt,$$
+
+    and furthermore its quadratic variation must be zero. See Lorig proposition 7.3.2.
+
+    $$[Y,Y]_T=0$$
+
+
+    \item Consider the SDE $$dX_t = \mu(X_t)dt + \sigma(X_t)dW_t.$$
+    
+    \begin{enumerate}
+        \item Show that $$v(x,t):= \mathbb E\left[ \delta(x-X_t)\Big| X_0=y \right],$$
+        where $\delta(t)$ is the Dirac-$\delta$ function, satisfies the partial differential equation 
+
+        \begin{align*}
+            \begin{dcases}
+                \frac{\partial v(x,t)}{\partial t} = \frac{\partial^2}{\partial x^2} \left( \frac{\sigma^2(x)}{2} v(x,t) \right) - \frac{\partial}{\partial x} \left( \mu(x) v(x,t) \right) \\
+                v(x,0) = \delta(x-y)
+            \end{dcases}
+        \end{align*}
+
+        \textbf{Solution:} We recall that for an SDE solution $X_t$ the transition density function $\Gamma(t,x;T,y)$ is defined by 
+
+        \begin{align*}
+            \Gamma(t,x;T,y)dy = \mathbb P(X_t \in dy|X_t = x)
+        \end{align*}
+
+        We can use the identity $\mathbb P(A) = \mathbb E \mathds 1_A$ to write this as
+
+        \begin{align*}
+            \Gamma(t,x;T,y)dy &= \mathbb P\left[X_t \in dy\big|X_t = x\right] \\
+            &= \mathbb E \left[ \mathds 1_{\{X_t \in dy\}} \big| X_t=x \right] \\
+            &= \mathbb E \left[ \delta(X_t-y) \big| X_t=x \right]
+        \end{align*}
+
+        Comparing this expression with the definition of $v(x,t)$, we see that 
+
+        $$v(x,t) = \Gamma(0,y;t,x)$$
+
+        Since $v(x,t)$ is a forward transition density function it follows that it must satisfy the Kolmogorov Forward Equation
+
+        \begin{align*}
+            (-\partial_t + \mathcal A^*(t)) v(x,t) = 0 && v(x,0) = \delta(x-y)
+        \end{align*}
+
+        where $\mathcal A^*(t) = -\partial_x \mu(x) + \frac{1}{2} \partial_x^2 \sigma^2(x)$ is the adjoint generator of $X_t$. QED. 
+
+        \item Show that $$u(x,t) = \mathbb E \left[ \varphi(X_t) \Big| X_0=x \right]$$
+        satisfies the partial differential equation 
+
+        \begin{align*}
+            \begin{dcases}
+                \frac{\partial u(x,t)}{\partial t} &= \frac{\sigma^2(x)}{2} \frac{\partial^2 u(x,t)}{\partial x^2} +\mu(x)\frac{\partial u(x,t)}{\partial x} \\
+            u(x,0) &= \varphi(x)
+            \end{dcases}
+        \end{align*}
+
+        \textbf{Solution:} To begin we note that $u(x,t)$ clearly satisfies the desired initial condition, as 
+
+        \begin{align*}
+            u(x,0) &= \mathbb E \left[ \varphi(X_0) \Big| X_0=x \right]\\
+            &= \varphi(x)
+        \end{align*}
+        
+        
+        Next, we write $u(x,t)$ in terms of the transition probability density of $X$ as
+
+        \begin{align*}
+            u(x,t) &= \mathbb E \left[ \varphi(X_t) \Big| X_0=x \right]\\
+            &= \int \varphi(y) \Gamma(0,x;t,y) dy
+        \end{align*}
+
+        Differentiating with respect to $t$ gives us 
+
+        \begin{align*}
+            \frac{\partial u(x,t)}{\partial t} &= \frac{\partial}{\partial t} \int \varphi(y) \Gamma(0,x;t,y) dy \\
+            &= \int \varphi(y) \frac{\partial \Gamma(0,x;t,y)}{\partial t} dy
+        \end{align*}
+
+        ...and no time to finish! However, what I would like to do here is use the KFE to write $$\frac{\partial u(x, t)}{\partial t} = \int \varphi(y) (-\mathcal{A}^*(y) \Gamma(0, x; t, y)) dy$$
+
+        then use integration by parts to move the differential operators from $\mathcal A^*(y)$ onto $\varphi(y)$, something like 
+
+        $$\frac{\partial u(x, t)}{\partial t} = \int (\mathcal A(y)\varphi(y)) \Gamma(0, x; t, y) dy$$
+    
+    \end{enumerate}
+    
+    \item We denote Kolmogorov's backward and forward operators as 
+    
+    \begin{align*}
+        \mathscr L_x[u] &= \frac{\sigma^2(x)}{2} \frac{d^2 u(x)}{dx^2} + \mu(x) \frac{du(x)}{dx}, \\
+        \mathscr L_x^*[f] &= \frac{d^2}{dx^2}\left( \frac{\sigma^2(x)}{2} f(x,t) \right) - \frac{d}{dx}\left( \mu(x) f(x,t) \right).
+    \end{align*}
+
+    \begin{enumerate}
+        \item Show that $\mathscr L_x$ has the alternative expression 
+        
+        \begin{align}
+            \mathscr L_x[u] = \frac{\sigma^2(x) s(x)}{2} \frac{d}{dx} \left( s^{-1}(x) \frac{du(x)}{dx} \right),
+        \end{align}
+
+        where $s(x)$ is known as the scale density: $$s(x) = \exp \left\{ - \int \frac{2\mu(x)}{\sigma^2(x)}dx \right\}.$$
+
+        \textbf{Solution:} By direct evaluation, we have 
+
+        \begin{align*}
+            \frac{\sigma^2(x) s(x)}{2} \frac{d}{dx} \left( s^{-1}(x) \frac{du(x)}{dx} \right) &= \frac{\sigma^2(x) s(x)}{2} \left( \frac{u'(x)}{s(x)} \right)' \\
+            &= \frac{\sigma^2(x) s(x)}{2} \left( \frac{s(x) u''(x) - s'(x) u'(x)}{s^2(x)} \right) \\
+            &= \frac{\sigma^2(x)}{2} u''(x) - \frac{\sigma^2(x)}{2} \frac{s'(x)}{s(x)} u'(x) \\
+            &= \frac{\sigma^2(x)}{2} u''(x) -\frac{\sigma^2(x)}{2} \left(-\frac{2\mu(x)}{\sigma^2(x)} \right) u'(x) \\
+            &= \frac{\sigma^2(x)}{2} u''(x) + \mu(x) u'(x) \\
+            &= \mathscr L_x[u]
+        \end{align*}
+
+        Hence (1) is indeed a valid alternative expression of $\mathscr L_x$. 
+
+        \item Give the corresponding expression, as in (1), for $\mathscr L_x^*$. 
+
+        \textbf{Solution:} By the definition of adjointness we have 
+
+        $$\langle \mathscr L_x^*[f], u \rangle = \langle f, \mathscr L_x[u]\rangle$$
+
+        Note that if $u$ and $f$ represent transition densities, than integrability requires that $u, f \rightarrow 0$ as $|x| \rightarrow \infty$. Let $f'(x,t) = f_x(x,t)$. Using (1), we have 
+
+        \begin{align*}
+            \langle \mathscr L_x^*[f], u \rangle &= \int_{\mathbb R} f(x,t) \frac{\sigma^2(x) s(x)}{2} \left( \frac{u'(x)}{s(x)} \right)' dx\\
+            &= f(x) \frac{\sigma^2(x) s(x)}{2} \frac{u'(x)}{s(x)} \Bigg|_{-\infty}^\infty - \int_{\mathbb R} \left( f(x,t) \frac{\sigma^2(x)s(x)}{2} \right)' \frac{u'(x)}{s(x)}dx \\
+            &= - \int_{\mathbb R} \left( f(x,t) \frac{\sigma^2(x)s(x)}{2} \right)' \frac{u'(x)}{s(x)}dx \\
+            &= - \left( f(x,t) \frac{\sigma^2(x)s(x)}{2} \right)' \frac{u(x)}{s(x)} \Bigg|_{-\infty}^\infty + \int_{\mathbb R} \left(\frac{1}{s(x)} \left( f(x,t) \frac{\sigma^2(x)s(x)}{2} \right)' \right)' u(x) dx \\
+            &= \int_{\mathbb R} \left(\frac{1}{s(x)} \left( f(x,t) \frac{\sigma^2(x)s(x)}{2} \right)' \right)' u(x) dx
+        \end{align*}
+
+        From this we can see that 
+
+        $$\mathscr L_x^*[f] = \frac{d}{d x} \left( \frac{1}{s(x)} \frac{d}{d x} \left( \frac{\sigma^2(x) s(x)}{2} f(x,t) \right) \right)$$
+
+        \item Consider the linear partial differential equation (PDE) 
+        
+        \begin{align}
+            \begin{dcases}
+                \frac{\partial f(x,t)}{\partial t} = \mathscr L_x^*[f(x,t)]-\gamma(t,x) f(x,t)\\
+            f(x,0) = \psi(x) 
+            \end{dcases}
+        \end{align}
+
+        where the operator $\mathscr L_x^*$ is defined above. Express the solution to the PDE (2) in terms of the Itô process $X_t$ that satisfies $$dX_t = \mu(X_t)dt+\sigma(X_t)dW_t.$$
+
+        \textbf{Solution:} Let us assume a separable solution and define
+
+        $$f(x,t) = G(t)F(x)$$
+
+        For the time dependence we have
+
+        \begin{align*}
+            G'(t) = -\lambda G(t) \Rightarrow G(t) = A e^{-\lambda t}
+        \end{align*}
+
+        For the spatial dependence we have 
+
+        \begin{align*}
+            \mathscr L_x^*[F(x)] - \gamma(t,x) F(x) &= -\lambda F(x) \\
+            \left( \frac{1}{s(x)} \left( \frac{\sigma^2(x) s(x)}{2} F(x) \right)' \right)' - \gamma(t, x)F(x) &= -\lambda F(x)
+        \end{align*}
+
+        This is a Sturm-Liouville equation whose solution can be written as 
+        
+        $$F(x) = \sum_{n=1}^\infty c_n \phi_n(x)$$
+
+        where $\phi_n(x)$ are eigenfunctions of the Sturm-Liouville operator 
+
+        $$\mathscr L_x^*[\phi_n] - \gamma(t,x)\phi_n = -\lambda_n \phi_n$$
+
+        The constants $c_n$ can be determined using the initial condition $\psi(x)$ as 
+
+        $$c_n = \frac{\int \psi(x)\phi_n(x)dx}{\int \phi_n^2(x) dx}$$
+
+        and hence our final solution can be written as
+
+        $$f(x,t) = e^{-\lambda t}\sum_{n=1}^\infty c_n \phi_n(x) $$
+
+        To express this solution in terms of $X_t$ we can use Lorig Theorem 9.2.2. to write 
+
+        $$f(x,t) = \mathbb E\left[e^{-\int_0^t \gamma(s, X_s) ds} \psi(X_t) \big| X_0 = x\right]$$
+
+    \end{enumerate}
+
+    \item Consider a two-dimensional SDE 
+    
+    \begin{align*}
+        dX_1(t) &= \mu_1(X_1, X_2)dt+\sigma dW_1(t) \\
+        dX_2(t) &= \mu_2(X_1, X_2)dt + \sigma dW_2(t) 
+    \end{align*}
+
+    where $$(\mu_1, \mu_2)(\mathbf x) = -\nabla U(\mathbf x) \text{ and } \mathbf x = (x_1, x_2),$$ and $W_1(t)$ and $W_2(t)$ are two independent standard Brownian motions.
+
+    \begin{enumerate}
+        \item Give the generator $\mathcal A$ and its $L^2(\mathbb R^2, d\mathbf x)$ adjoint $\mathcal A^*$. They are known as Kolmogorov's backward and forward operators for the time-homogeneous Ito diffusion: 
+        
+        \begin{align*}
+            \mathcal A[u] = \frac{\sigma^2}{2}\nabla^2 u + \dots && \mathcal A^*[f] = \frac{\sigma^2}{2}\nabla^2 f + \dots
+        \end{align*}
+
+        \textbf{Solution:} We can write the SDE in question in vector form as 
+
+        \begin{align*}
+            d \mathbf X(t)  = \boldsymbol \mu(\mathbf x) dt + \sigma d\mathbf W
+        \end{align*}
+
+        Then, by analogy with the 1D case, we give the 2D generator $\mathcal A$ and its adjoint to be 
+
+        \begin{align*}
+            \mathcal A[u] &= \frac{\sigma^2}{2} \nabla^2 u + \boldsymbol \mu(\mathbf x) \cdot \nabla u \\
+            \mathcal A^*[f] &= \frac{\sigma^2}{2} \nabla^2 f - \nabla \cdot (\boldsymbol \mu(\mathbf x) f)
+        \end{align*}
+
+        \item Show that under a proper choice of the weight $\rho(\mathbf x) >0$ for the inner product between any $f, g \in L^2$, $$\langle f, g \rangle_\rho = \int_{\mathbb R^2} \rho(\mathbf x) f(\mathbf x) g(\mathbf x) d\mathbf x,$$
+        
+        $\mathcal A$ is self-adjoint, i.e., $$\langle f, \mathcal A g \rangle_\rho = \langle \mathcal A f, g \rangle_\rho.$$
+
+        You can assume that both $f(\mathbf x)$ and $g(\mathbf x)$, and their partial derivatives, go to $0$ sufficiently fast as $|\mathbf x| \rightarrow \infty$. 
+
+        \textbf{Solution:} In the 1D case the self-adjoint form of $\mathcal A$ is given by 
+
+        $$\mathcal A_{1D}[u]  = \frac{1}{m(x)}\partial_x \left( \frac{1}{s(x)} \partial_x u(x) \right)$$
+
+        where $s$ and $m$ are the scale and speed densities, respectively, which are given by 
+
+        \begin{align*}
+            s(x) = \exp\left\{ - \int \frac{2 \mu(x)}{\sigma^2(x)}dx \right\} && m(x) = \frac{2}{\sigma^2(x)s(x)}
+        \end{align*}
+
+        The speed density $m(x)$ can then be used to define an inner product under which $\mathcal A_{1D}$ is self-adjoint. 
+
+        $$\langle f, \mathcal A_{1D} g\rangle_m = \langle \mathcal A_{1D}f,  g\rangle_m$$
+
+        To extend this result to $\mathbb R^2$ we can modify the integral term to be a path integral in $\mathbb R^2$. Hence, recalling that $\sigma(x)=\sigma$ is constant, we define 
+
+        \begin{align*}
+            \rho(x) &= \exp \left\{ \frac{2}{\sigma^2} \int_{\mathbb R^2} \boldsymbol \mu(\mathbf x) \cdot d \mathbf x \right\} \\
+            &= \exp \left\{ -\frac{2}{\sigma^2} \int_{\mathbb R^2} \nabla U(\mathbf x)  \cdot d \mathbf x \right\} \\
+            &= \exp \left\{ -\frac{2}{\sigma^2} U(\mathbf x)  \right\}
+        \end{align*}
+        
+        To show that this choice of weight results in $\mathcal A$ being self-adjoint we calculate:
+
+        \begin{align*}
+            \langle f, \mathcal A g \rangle_\rho &= \int_{\mathbb R^2} \rho(\mathbf x) f(\mathbf x) \mathcal A g(\mathbf x) d\mathbf x \\
+            &=\int_{\mathbb R^2} \rho(\mathbf x) f(\mathbf x) \left( \frac{\sigma^2}{2} \nabla^2 g(\mathbf x) + \boldsymbol \mu(\mathbf x) \cdot \nabla g(\mathbf x) \right) d\mathbf x \\
+            &= \frac{\sigma^2}{2} \int_{\mathbb R^2} \rho(\mathbf x) f(\mathbf x) \nabla^2 g(\mathbf x) d\mathbf x + \int_{\mathbb R^2} \rho(\mathbf x) f(\mathbf x) \boldsymbol \mu(\mathbf x) \cdot \nabla g(\mathbf x) d\mathbf x \\
+            &= \frac{\sigma^2}{2} \int_{\mathbb R^2}g(\mathbf x) \nabla^2 \left( \rho(\mathbf x) f(\mathbf x) \right) d\mathbf x - \int_{\mathbb R^2} g(\mathbf x) \nabla \cdot \left( \rho(\mathbf x) f(\mathbf x) \boldsymbol \mu (\mathbf x) \right) d\mathbf x 
+        \end{align*}
+
+        Note that $$\boldsymbol \mu (\mathbf x) = - \nabla U(\mathbf x) \Rightarrow \nabla \cdot \boldsymbol \mu(\mathbf x)=0,$$ and that by the definition of $\rho(\mathbf x)$ we have
+
+        $$\nabla \rho(\mathbf x) = \frac{2 \boldsymbol \mu(\mathbf x)}{\sigma^2} \rho(\mathbf x)$$
+
+        We can use these results to calculate the following quantities
+
+        \begin{align*}
+            \nabla^2(\rho(\mathbf x) f(\mathbf x)) &= \nabla(f \nabla \rho + \rho \nabla f)\\
+            &= \nabla\left(\frac{2\boldsymbol \mu}{\sigma^2} \rho f + \rho \nabla f\right) \\
+            &= \frac{2\boldsymbol \mu}{\sigma^2} \cdot (f \nabla \rho + \rho \nabla f) +\nabla \rho \cdot \nabla f + \rho \nabla^2 f \\
+            &= \frac{2\boldsymbol \mu}{\sigma^2} \cdot \left( \frac{2 \boldsymbol \mu }{\sigma^2} \rho f + \rho \nabla f \right) + \frac{2\boldsymbol \mu }{\sigma^2} \rho \cdot \nabla f + \rho  \nabla^2 f \\
+            &= \frac{4 |\boldsymbol \mu|^2}{\sigma^4}\rho f + \frac{4 \rho}{\sigma^2}\boldsymbol \mu \cdot \nabla f + \rho \nabla^2 f
+        \end{align*}
+
+        \begin{align*}
+            \nabla \cdot (\rho(\mathbf x)f(\mathbf x)\boldsymbol \mu(\mathbf x)) &= \boldsymbol \mu \cdot (f\nabla \rho + \rho \nabla f) \\
+            &= \boldsymbol \mu \left( \frac{2\boldsymbol \mu}{\sigma^2} \rho f + \rho \nabla f \right) \\
+            &= \frac{2 |\boldsymbol \mu|^2}{\sigma^2} \rho f + \rho \boldsymbol \mu \cdot \nabla f
+        \end{align*}
+
+        Plugging these expressions into our above integral gives us 
+
+        \begin{align*}
+            \langle f, \mathcal A g \rangle_\rho &= \frac{\sigma^2}{2} \int_{\mathbb R^2}g(\mathbf x) \nabla^2 \left( \rho(\mathbf x) f(\mathbf x) \right) d\mathbf x - \int_{\mathbb R^2} g(\mathbf x) \nabla \cdot \left( \rho(\mathbf x) f(\mathbf x) \boldsymbol \mu (\mathbf x) \right) d\mathbf x \\
+            &= \int_{\mathbb R^2} g(\mathbf x) \rho(\mathbf x) \left[\boldsymbol \mu(\mathbf x) \cdot \nabla f(\mathbf x) + \frac{\sigma^2}{2} \nabla f(\mathbf x) \right]d\mathbf x \\
+            &= \int_{\mathbb R^2} g(\mathbf x) \rho(\mathbf x) \mathcal A f(\mathbf x)d\mathbf x \\
+            &= \langle \mathcal A f, g\rangle_\rho
+        \end{align*}
+
+        QED.
+
+
+        \item Similarly, with an alternative choice of the weight for the inner product, $\mathcal A^*$ is also self-adjoint: $$\langle f, \mathcal A^* g \rangle_\rho = \langle \mathcal A^* f, g \rangle_\rho.$$
+        (Hint: This is the 2D generalization of the material in MLN, Sec. 9.5).
+
+        \textbf{Solution:} Ran out of time! 
+        
+
+    \end{enumerate}
+
+    \item Let $X_t \in \mathbb R^2$ be a Lévy process defined by $$X_t = \int_0^t \sigma(t) dW(t) + \int_{\mathbb R^2} zN(t,dz),$$
+    in which the second term is a compound Poisson process with scalar Poisson random measure $N(t,z,\omega)$ that is independent from the $W(t,\omega)$; $\sigma, N \in \mathbb R^1$ and $W,z \in \mathbb R^2$. If the Lévy measure $$\nu(dz) = \mathbb E[N(1,dz)]= \frac{\lambda}{2\pi \eta^2} \exp \left( - \frac{z_1^2 + z_2^2}{2\eta^2} \right)dz,$$
+
+    where $dz=dz_1 dz_2$, and both $\lambda$ and $\eta$ are real positive numbers. Find the characteristic function for $X_t$. 
+
+    \textbf{Solution:} The Lévy-Kintchine formula (Lorig 10.1.17) can be used to compute the characteristic function of a $d$-dimensional Lévy process. In particular, for the 2D Lévy process $X_t$ defined above, the Lévy-Kintchine formula states that its characteristic function is given by 
+
+    \begin{align*}
+        \phi_{X_t}(u) = \mathbb E e^{i \langle u , X_t \rangle} = e^{t \psi(u)}
+    \end{align*}
+
+    where $\psi$ is the characteristic exponent of $X$, given by 
+
+    \begin{align*}
+        \psi(u) &= -\frac{\sigma^2}{2} |u|^2 + \int_{|z|<R} \left( e^{i\langle u, z \rangle} - 1 - i\langle u, z \rangle \right) \nu(dz) + \int_{|z| \ge R} \left( e^{i\langle u, z \rangle} -1 \right) \nu(dz) \\
+        &= -\frac{\sigma^2}{2} |u|^2 + \int_{\mathbb R^2} \left( e^{i \langle u, z \rangle} -1 \right) \nu(dz) - i \int_{|z| < R} \langle u, z \rangle \nu(dz) \\
+        &= -\frac{\sigma^2}{2}|u|^2 -1 + \int_{\mathbb R^2} e^{i \langle u, z \rangle} \nu(dz) - i \int_{|z|< R} \langle u, z \rangle \nu(dz)
+    \end{align*}
+
+    Next we note that $\nu$ is a Gaussian Lévy measure (Lorig 10.1.19) with mean jump size of zero, a jump variance of $\eta^2$, and a jump intensity of $\lambda$. Furthermore, since $\eta$ satisfies
+
+    \begin{align*}
+        \int_{|z| \ge 1} |z| \nu(dz)< \infty && \int_{|z| <1} |z|\nu(dz) < \infty
+    \end{align*}
+
+    we are free to set $R=0$. This results in the imaginary integral term vanishing, and thus our characteristic exponent can be written as 
+
+    \begin{align*}
+        \psi(u) &= - \frac{\sigma^2}{2}|u|^2 -1 + \int_{\mathbb R^2} e^{i \langle u, z \rangle} \nu(dz) \\
+        &= - \frac{\sigma^2}{2}|u|^2 -1 + \frac{\lambda}{2\pi \eta^2} \int_{\mathbb R^2} \exp \left\{ - \frac{\langle z, z \rangle}{2\eta^2}+i\langle u, z \rangle \right\} dz \\
+        &= -\frac{\sigma^2}{2}|u|^2 -1 + \lambda I(u)
+    \end{align*}
+
+    Let us now evaluate the integral $I(u)$. 
+
+    \begin{align*}
+        I(u) &= \frac{1}{2\pi \eta^2}\int_{\mathbb R^2} \exp \left\{ - \frac{\langle z, z \rangle}{2\eta^2}+i\langle u, z \rangle \right\} dz \\
+        &= \frac{1}{2\pi \eta^2} \int_{\mathbb R^2} \exp \left\{ - \frac{1}{2\eta^2} \left( \langle z-i\eta^2 u, z-i\eta^2 u \rangle + \eta^4 |u|^2 \right) \right\} dz \\
+        &= \frac{1}{2\pi \eta^2}\exp\left\{-\frac{\eta^2 |u|^2}{2}\right\} \int_{\mathbb R^2} \exp \left\{ - \frac{\langle z-i\eta^2 u, z-i \eta^2 u \rangle}{2\eta^2} \right\} dz \\
+        &= \exp\left\{-\frac{\eta^2 |u|^2}{2}\right\}
+    \end{align*}
+
+    Plugging this back in to the above, we find the characteristic exponent to be 
+
+    \begin{align*}
+        \psi(u) &= -\frac{\sigma^2}{2}|u|^2 -1 + \lambda \exp \left\{ - \frac{\eta^2 |u|^2}{2} \right\}
+    \end{align*}
+
+    Hence, by the Lévy-Kintchinen formula, the characteristic function of $X_t$ is given by 
+
+    \begin{align*}
+        \phi_{X_t}(u) &= \exp \left\{t \left(\lambda e^{ - \frac{\eta^2 |u|^2}{2}} - \frac{\sigma^2}{2}|u|^2 -1 \right) \right\}
+    \end{align*}
+    
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,281 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage{fullpage}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{bbm}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\title{{AMATH 562\\
+Advanced Stochastic Processes}\\
+{\bf \Huge Homework 3}}
+
+\author{Lucas Cassin Cruz Burke}
+
+\date{Due: February 13, 2023}
+
+\maketitle
+
+\begin{enumerate}
+
+\item $W(t)$ is a standard Brownian motion.
+\begin{enumerate}
+    \item Let $c>0$ be a constant. Show that the process defined by $B(t)=cW(t/c^2)$ is a standard Brownian motion.
+
+    \textbf{Solution:} We see that $B(t)$ is a scaled Brownian motion with respect to a slow-time parameter $\tau=t/c^2$. In particular we can show that it fits all of the criteria for Brownian motion according to Lévy's characterization. $B$ has continuous sample paths and, since $W$ is martingale with respect to a filtration $\mathbb{F}$, it follows that $B$ must also be martingale with respect to the same filtration. We can also see that $B(0)=cW(0)=0$. Lastly, letting $\Pi=\{t_0,t_1,\dots,t_n\}$ be a partition of $[0,t]$, we have: 
+
+    \begin{align*}
+        [B,B]_t&=\lim_{||\Pi||\rightarrow 0} \sum_{j=0}^{n-1}|B(t_{j+1})-B(t_j)|^2 \\&= \lim_{||\Pi||\rightarrow 0} c^2 \sum_{j=0}^{n-1}|W(t_{j+1}/c^2)-W(t_j/c^2)|^2\\&= c^2 [W,W]_{t/c^2}\\&= t
+    \end{align*}
+
+    Thus, by the Lévy characterization of Brownian motion, $B(t)$ must be a standard Brownian motion.
+
+    \item For $t=n=0,1,\dots$, show that $W^2(n)-n$ is a discrete time martingale.
+
+    \textbf{Solution:} Define $M(n)=W^2(n)-n$ and let $\mathbb{F}=\{\mathcal{F}_n\}$ be a filtration of the Brownian motion $W$, i.e. $\forall n: W(n) \in \mathcal{F}_n$. Since $M=M(n,W)$ is a deterministic function of $W$ and $n$, it follows that $M$ is also $\mathbb{F}$-adapted. To determine whether $M$ is a discrete-time martingale with respect to the filtration $\mathbb{F}$, we consider the expectation 
+
+    \begin{align*}
+        \mathbb{E}[M(n+m)|\mathcal{F}_{n}] &= \mathbb{E}[W^2(n+m)-n-m|\mathcal{F}_{n}] \\&= \mathbb{E}[W^2(n+m)|\mathcal{F}_n]-n-m
+    \end{align*}
+
+    We may use the property of Brownian motion $\forall n, m: W(n+m)-W(n) \sim \mathcal{N}(0, m)$ to calculate the expectation term. We have
+
+    \begin{align*}
+        \mathbb{E}[W^2(n+m)|\mathcal{F}_n] &= \mathbb{E}[(W(n+m)-W(n)+W(n))^2|\mathcal{F}_n]\\ &= \mathbb{E}[(W(n+m)-W(n))^2 + 2W(n)(W(n+m)-W(n)) + W^2(n)|\mathcal{F}_n] \\&= m + W^2(n)
+    \end{align*}
+
+    Then, plugging this into the above, we have
+
+    \begin{align*}
+        \mathbb{E}[M(n+m)|\mathcal{F}_{n}] &= \mathbb{E}[W^2(n+m)|\mathcal{F}_n]-n-m \\ &= W^2(n)-n\\&= M(n)
+    \end{align*}
+
+    Hence, we conclude that $M(n) = W^2(n)-n$ is a discrete time martingale.
+    
+\end{enumerate}
+
+\item The $n$th variation of a function $f$, over the interval $[0,T]$, is defined as $$V_T(n,f):= \lim_{|| \Pi ||\rightarrow 0} \sum_{j=0}^{m-1}\left| f(t_{j+1})-f(t_j) \right|^n$$ in which $\Pi=\{0=t_0, t_1, \dots, t_m=T\}$
+is a \textit{partition} of $[0,T]$, and $$||\Pi||=\max_{0 \le j \le m-1} (t_{j+1}-t_j).$$
+Show that $V_T(1,W)=\infty$ and $V_T(3,W)=0$, where $W$ is a Brownian motion.
+\textbf{Solution:} Beginning with the first variation, we have 
+
+\begin{align*}
+    V_T(1,W) &= \lim_{||\Pi||\rightarrow 0} \sum_{j=0}^{m-1} |W(t_{j+1})-W(t_{j})|
+\end{align*}
+
+Let us consider consider the sampled first variation 
+
+$$F_\Pi := \sum_{j=0}^{m-1}|W(t_{j+1})-W(t_{j})|$$
+
+Using the fact that $W(t_{j+1})-W(t_{j}) \sim \mathcal{N}(0, t_{j+1}-t_j)$, we can calculate the expectation of this quantity to be 
+
+\begin{align*}
+    \mathbb{E} F_\Pi &= \sum_{j=0}^{m-1} \mathbb{E} |W(t_{j+1})-W(t_{j})|\\ &= \sum_{j=0}^{m-1} \sqrt{t_{j+1}-t_j} = \sum_{j=0}^{m-1} \frac{t_{j+1}-t_j}{\sqrt{t_{j+1}-t_j}}\\&\ge \frac{1}{\sqrt{||\Pi||}}\sum_{j=0}^{m-1} t_{j+1}-t_j = \frac{T}{\sqrt{||\Pi||}}
+\end{align*}
+
+Thus, as $||\Pi|| \rightarrow 0$ we have $\mathbb{E}F_\Pi \rightarrow \infty$, which proves that 
+
+\begin{align*}V_T(1,W) = \lim_{||\Pi||\rightarrow 0} F_\Pi = \infty && \text{(a.s.)}\end{align*}
+
+Next, let us consider the cubic variation 
+
+$$V_T(3,W) = \lim_{||\Pi||\rightarrow 0} \sum_{j=0}^{m-1} |W(t_{j+1})-W(t_j)|^3$$
+
+We start by considering the sampled cubic variation 
+
+$$C_\Pi := \sum_{j=0}^{m-1} |W(t_{j+1})-W(t_j)|^3$$
+
+We again use the fact that $W(t_{j+1})-W(t_{j}) \sim \mathcal{N}(0, t_{j+1}-t_j)$ to calculate the expectation of this quantity.
+
+\begin{align*}
+    \mathbb{E} C_\Pi &= \sum_{j=0}^{m-1} \mathbb{E} |W(t_{j+1})-W(t_j)|^3\\
+    &= \sum_{j=0}^{m-1} (t_{j+1}-t_j)^{3/2} \\
+    &\le \sqrt{||\Pi||} \sum_{j=0}^{m-1} t_{j+1}-t_j = T \sqrt{||\Pi||}
+\end{align*}
+
+Thus, as $||\Pi|| \rightarrow 0$ we have $\mathbb{E}C_\Pi \rightarrow 0$, which proves that 
+
+\begin{align*}V_T(3,W) = \lim_{||\Pi||\rightarrow 0} C_\Pi = 0 && \text{(a.s.)}\end{align*}
+
+\item \begin{enumerate}
+    \item Show that the transition probability density function for standard Brownian motion $W(t)$: $$\frac{1}{dx}\Pr \left\{ x < W(t+s) \le x + dx \right| \left. W(s) =y \right\} = \frac{1}{\sqrt{2\pi t}} e^{-\frac{(x-y)^2}{2t}} = f(x;t|y)$$
+    in which $t,s >0$. 
+
+    \textbf{Solution:} By the definition of Brownian motion, we have 
+
+    \begin{align*}
+        W(s+t)-W(s) \sim \mathcal{N}(0, t) && \Rightarrow && W(s+t) \sim \mathcal{N}(W(s),t)
+    \end{align*}
+
+    This means that, for a fixed $W(s)=y$, the probability density function of $W(s+t)$ is given by
+
+    \begin{align*}
+        \Pr\{x < W(s+t) \le x + dx | W(s)=y\} = \frac{1}{\sqrt{2\pi t}} e^{-\frac{(x-y)^2}{2t}} dx = f(x;t|y)dx
+    \end{align*}
+
+    Dividing all terms by $dx$ gives us the transition probability density function
+
+    $$\frac{1}{dx}\Pr \left\{ x < W(t+s) \le x + dx \right| \left. W(s) =y \right\} = \frac{1}{\sqrt{2\pi t}} e^{-\frac{(x-y)^2}{2t}} = f(x;t|y)$$
+
+    \item Show that $f(x;t|y)$ satisfies the following two linear partial differential equations: \begin{align*}
+        \frac{\partial f(x;t|y)}{\partial t}=\frac{1}{2} \left( \frac{\partial^2 f(x;t|y)}{\partial x^2} \right) && \text{and} && \frac{\partial f(x;t|y)}{\partial t} = \frac{1}{2} \left( \frac{\partial^2 f(x;t|y)}{\partial y^2} \right)
+    \end{align*}
+
+    \textbf{Solution:} This can be shown by direct differentiation. We have
+
+    \begin{align*}
+        \frac{\partial f}{\partial t} &= \frac{\partial}{\partial t} \frac{1}{\sqrt{2\pi t}} e^{-\frac{(x-y)^2}{2t}} = -\frac{t-(x-y)^2}{2t^2\sqrt{2\pi t}} e^{-(x-y)^2/(2t)} \\\\
+        \frac{\partial^2 f}{\partial x^2} &= \frac{\partial^2}{\partial x^2} \frac{1}{\sqrt{2\pi t}} e^{-\frac{(x-y)^2}{2t}} = \frac{\partial}{\partial x} \frac{-(x-y)}{t\sqrt{2\pi t}}e^{-(x-y)^2/(2t)} \\&= -\frac{t-(x-y)^2}{t^2\sqrt{2\pi t}}e^{-(x-y)^2/(2t)} \\&= 2 \frac{\partial f}{\partial t} \\\\
+        \frac{\partial^2 f}{\partial y^2} &= \frac{\partial^2}{\partial y^2} \frac{1}{\sqrt{2\pi t}} e^{-\frac{(x-y)^2}{2t}} = \frac{\partial}{\partial y} \frac{x-y}{t \sqrt{2\pi t}} e^{-(x-y)^2/(2t)}\\
+        &= -\frac{t-(x-y)^2}{t^2\sqrt{2\pi t}}e^{-(x-y)^2/(2t)} \\&= 2 \frac{\partial f}{\partial t}
+    \end{align*}
+
+    Hence, we conclude that 
+
+    $$\frac{\partial f}{\partial t} = \frac{1}{2} \frac{\partial^2 f}{\partial x^2} = \frac{1}{2} \frac{\partial^2 f}{\partial y^2}$$
+\end{enumerate}
+
+\item \textbf{Exercise 8.1}: Compute $d(W_t^4)$. Write $W_T^4$ as an integral with respect to $W$ plus an integral with respect to $t$. Use this representation of $W_T^4$ to show that $\mathbb{E}W_T^4=3T^2$. Compute $\mathbb{E}W_T^6$ using the same technique.
+
+\textbf{Solution:} We can use the differential form of Itô's formula in one dimension. Recall that for $f \in C^2(\mathbb{R})$ we have
+
+$$df(X_t)=f'(X_t)dX_t + \frac{1}{2} f''(X_t)d[X,X]_t$$
+
+Hence, for $f(x)=x^4$ we have
+
+\begin{align*}
+    df(W_t) = dW_t^4 &= 4W_t^3 dW_t + 6 W_t^2 dt
+\end{align*}
+
+where we have used $d[W,W]_t = dt$. Using this, we may write $W_T^4$ as 
+
+$$W_T^4 = 4\int_0^T W_t^3 dW_t + 6 \int_0^T W_t^2 dt$$
+
+and we can calculate the expectation $\mathbb{E} W_T^4$ as 
+
+\begin{align*}
+    \mathbb{E} W_T^4 &= 4 \int_0^T \mathbb{E} W_t^3 dW_t + 6 \int_0^T \mathbb{E} W_t^2 dt \\
+    &= 6 \int_0^T t dt\\
+    &= 3 T^2
+\end{align*}
+
+Let us now use this same technique to compute $\mathbb{E} W_T^6$. Let $g(x) = x^6$, then by the Itô formula in one dimension, we have
+
+$$dg(W_t) = dW_t^6 = 6 W_t^5 dW_t + 30 W_t^4 dt$$
+
+$$\Rightarrow W_T^6 = 6 \int_0^T W_t^5 dW_t + 30 \int_0^T W_t^4 dt$$
+
+We can now calculate the expectation $\mathbb{E} W_T^6$. Using our prior result for $\mathbb{E}W_T^4$, we have
+
+\begin{align*}
+    \mathbb{E} W_T^6 &= 6 \int_0^T \mathbb{E} W_t^5 dW_t + 30 \int_0^T \mathbb{E} W_t^4 dt\\
+    &= 30 \int_0^T (3t^2)dt\\
+    &= 30 T^3
+\end{align*}
+
+\item \textbf{Exercise 8.2}: Find an explicit expression for $Y_T$ where $$dY_t = rdt + \alpha Y_t dW_t$$
+
+\textbf{Solution:} Let $Z_t := \exp(-\alpha W_t + \frac{1}{2} \alpha^2 t)$. Then by Itô's formula we have
+
+\begin{align*}
+    dZ_t &= -\alpha Z_t dW_t + \frac{1}{2} \alpha^2 Z_t dt + \frac{1}{2} \alpha^2 Z_t d[W,W]_t \\
+    &= -\alpha Z_t dW_t + \alpha^2 Z_t dt
+\end{align*}
+
+Using this, we may compute $d(Y_t Z_t)$ as 
+
+\begin{align*}
+    d(Y_t Z_t) &= Z_t dY_t + Y_t dZ_t + dY_t dZ_t \\
+    &= Z_t r dt + \alpha Y_t Z_t dW_t -\alpha Y_t Z_t dW_t + \alpha^2 Y_t Z_t dt - \alpha^2 Y_t Z_t dt \\
+    &= rZ_t dt
+\end{align*}
+
+Integrating both sides, we find 
+
+\begin{align*}
+    \int_0^T d(Y_t Z_t) &= Y_T Z_T - Y_0 Z_0 = r \int_0^T Z_t dt \\
+    \Rightarrow Y_T &= \frac{1}{Z_T} \left( r\int_0^T Z_t dt + Y_0 Z_0 \right)
+\end{align*}
+
+Lastly, we plug back in the explicit expression for $Z_t$ to find 
+
+$$Y_T = \left( r\int_0^T e^{-\alpha W_t + \frac{1}{2} \alpha^2 t} dt + Y_0 \right) e^{\alpha W_T - \frac{1}{2} \alpha^2 T}$$
+
+\item \textbf{Exercise 8.3}: Suppose $X,\Delta$ and $\Pi$ are given by \begin{align*}
+    dX_t=\sigma X_t dW_t, && \Delta_t = \frac{\partial f}{\partial x}(t,X_t), && \Pi_t=X_t \Delta_t
+\end{align*}
+where $f$ is some smooth function. Show that if $f$ satisfies $$\left( \frac{\partial}{\partial t} + \frac{1}{2} \sigma^2 x^2 \frac{\partial^2}{\partial x^2} \right) f(t,x)=0$$
+for all $(t,x)$, then $\Pi$ is a martingale with respect to a filtration $\mathcal{F}_t$ for all $W$.
+
+\textbf{Solution:} We begin by using Itô's formula to compute $d\Delta_t$. Using subscripts to denote partial derivatives of $f(t,X_t)$, we have
+
+\begin{align*}
+    d\Delta_t &= d(f_x) =  f_{xt} dt + f_{xx} dX_t + \frac{1}{2} f_{xxx} dX_t^2\\
+    &= f_{xt} dt + \sigma X_t f_{xx} dW_t + \frac{1}{2} \sigma^2 X_t^2 f_{xxx} dt\\
+    &= (f_{xt} + \frac{1}{2} \sigma^2 X_t^2 f_{xxx}) dt + \sigma X_t f_{xx} dW_t
+\end{align*}
+
+Using this, we may compute $d\Pi_t$ as 
+
+\begin{align*}
+    d\Pi_t &= X_t d\Delta_t + \Delta_t dX_t + d[X,\Delta]_t \\
+    &= X_t (f_{xt} + \frac{1}{2} \sigma^2 X_t^2 f_{xxx}) dt + \sigma X_t^2 f_{xx} dW_t + \sigma X_t f_x dW_t + \sigma^2 X_t^2 f_{xx} dt\\
+    &= X_t(f_{xt} + \frac{1}{2} \sigma^2 X_t^2 f_{xxx} + \sigma^2 X_t f_{xx}) dt + \sigma X_t( X_t f_{xx} +  f_x) dW_t
+\end{align*}
+
+From this we see that $\Pi$ is an Itô process with a drift term given by
+
+\begin{align*}
+    \Theta_t &= X_t(f_{xt} + \frac{1}{2} \sigma^2 X_t^2 f_{xxx} + \sigma^2 X_t f_{xx})
+\end{align*}
+
+However, since $f(t, X_t)$ satisfies
+
+$$\left( \frac{\partial}{\partial t} + \frac{1}{2} \sigma^2 x^2 \frac{\partial^2}{\partial x^2} \right) f(t,x)=0$$
+
+it follows that
+
+\begin{align*}
+    f_t &= - \frac{1}{2} \sigma^2 x^2 f_{xx} \\
+    \Rightarrow f_{xt} &= -\frac{1}{2} \sigma^2 \left( 2x f_{xx} + x^2 f_{xxx} \right)
+\end{align*}
+
+Evaluating this expression at $x=X_t$ and substituting it into our drift term results in
+
+$$\Theta_t=0$$
+
+It follows that $\Pi$ is an Itô process with zero drift. Consequently, $\Pi$ must be a martingale with respect to any filtration $\mathbb{F}$ of the brownian motion $W$. 
+
+\item \textbf{Exercise 8.4}: Suppose $X$ is given by $$dX_t = \mu(t,X_t)dt + \sigma(t,X_t)dW_t.$$
+For any smooth function $f$ define $$M_t^f := f(t,X_t) - f(0,X_0) - \int_0^t \left( \frac{\partial}{\partial s} + \mu(s,X_s)\frac{\partial}{\partial x} + \frac{1}{2} \sigma^2(s,X_s) \frac{\partial^2}{\partial x^2}\right) f(s,X_s)ds.$$
+Show that $M^f$ is a martingale with respect to a filtration $\mathcal{F}_t$ for $W$. 
+
+\textbf{Solution:} We note that we can write the given expression for $M_t^f$ as 
+
+$$M_t^f = \int_0^t df - \int_0^t \left( f_s + \mu f_x + \frac{1}{2} \sigma^2 f_{xx}\right)ds$$
+
+Additionally, using Itô's formula we may write $df$ as 
+
+\begin{align*}
+    df &= f_x dX_t + f_t dt + \frac{1}{2} f_{xx} dX_t^2\\
+    &= f_x(\mu dt + \sigma dW_t) + f_t dt + \frac{1}{2} \sigma^2  f_{xx}dt\\
+    &= \left(f_t + \mu f_x + \frac{1}{2} \sigma^2 f_{xx}\right)dt + \sigma f_x dW_t
+\end{align*}
+
+Hence, we have
+\begin{align*}
+    M_t^f &= \int_0^t \sigma f_x dW_s + \int_0^t \left(f_s + \mu f_x + \frac{1}{2} \sigma^2 f_{xx}\right)ds - \int_0^t \left( f_s + \mu f_x + \frac{1}{2} \sigma^2 f_{xx}\right)ds\\
+    &= \int_0^t \sigma(s, X_s) f_x(s, X_s) dW_s
+\end{align*}
+
+Since $M_t^f$ is an Itô process with zero drift, it follows that it must be Martingale with respect to any filtration $\mathbb{F}$ for the Brownian motion $W$. 
+
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99d (TeX Live 2022)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: abbrv.bst
+Database file #1: references.bib
+Warning--entry type for "sanzalonso2023" isn't style-file defined
+--line 29 of file references.bib
+Warning--entry type for "graphlearning" isn't style-file defined
+--line 43 of file references.bib
+Warning--entry type for "amath563" isn't style-file defined
+--line 70 of file references.bib
+You've used 6 entries,
+            2118 wiz_defined-function locations,
+            534 strings with 4703 characters,
+and the built_in function-call counts, 1842 in all, are:
+= -- 174
+> -- 88
+< -- 2
++ -- 35
+- -- 28
+* -- 115
+:= -- 305
+add.period$ -- 16
+call.type$ -- 6
+change.case$ -- 32
+chr.to.int$ -- 0
+cite$ -- 6
+duplicate$ -- 66
+empty$ -- 152
+format.name$ -- 28
+if$ -- 389
+int.to.chr$ -- 0
+int.to.str$ -- 6
+missing$ -- 2
+newline$ -- 30
+num.names$ -- 14
+pop$ -- 44
+preamble$ -- 1
+purify$ -- 25
+quote$ -- 0
+skip$ -- 60
+stack$ -- 0
+substring$ -- 87
+swap$ -- 19
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 24
+warning$ -- 0
+while$ -- 18
+width$ -- 7
+write$ -- 61
+(There were 3 warnings)

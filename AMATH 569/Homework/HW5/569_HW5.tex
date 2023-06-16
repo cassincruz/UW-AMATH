@@ -1,0 +1,272 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+\usepackage{enumitem}
+
+% Page layout
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Lucas Cassin Cruz Burke}
+\rhead{AMATH 569}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
+
+% Theorem environments
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\theoremstyle{remark}
+\newtheorem*{solution}{Solution}
+
+\title{AMATH 569 Homework 5}
+\author{Lucas Cassin Cruz Burke}
+\date{May 25, 2023}
+
+\begin{document}
+
+\maketitle
+
+% Problem 1
+\begin{problem}
+    Consider the one-dimensional heat equation for conduction in a copper rod
+
+    \begin{align*}
+        u_t = \alpha^2 u_{xx} && \begin{cases}
+            u(0, t)=u(L, t) = 0 & 0 < x < L \\
+            u(x,0)=f(x) & t > 0
+        \end{cases}
+    \end{align*}
+
+    \begin{enumerate}[label=(\alph*)]
+        % 1.a.
+        \item Solve using separation of variables. Show that the time-dependence for the $n$-th standing mode is $\exp(-n^2(t/t_\epsilon))$, where $t_\epsilon \equiv (L/\pi \alpha)^2$, about 1 hour for a 2m-copper rod.
+        \begin{solution}
+        We assume that the solution can be written as $u(x,t) = X(x)T(t)$. Substituting this into the heat equation, we get $$XT' = \alpha^2 X''T$$
+
+        Dividing both sides by $XT$ gives us $$\frac{T'}{T} = \alpha^2 \frac{X''}{X} = -\lambda^2$$ Here, $-\lambda^2$ is an arbitrary separation constant, chosen to be negative to ensure that our solutions are bounded as $t \rightarrow \infty$.
+
+        This gives us two ODEs. The first one is $T' = -\lambda^2 T$, which has the general solution $T = Ae^{-\lambda^2 t}$. The second ODE is $\alpha^2 X'' = -\lambda^2 X$, which simplifies to $X'' = -(\lambda/\alpha)^2 X$. This has the general solution $X = c_1 \sin (\lambda x/\alpha) + c_2 \cos(\lambda x/\alpha)$.
+
+        Combining these solutions, we get $$u(x,t) = e^{-\lambda^2 t}[c_1 \sin(\lambda x/\alpha) + c_2 \cos(\lambda x/\alpha)]$$ Applying the boundary conditions, we find that $u(0,t)= e^{-\lambda^2 t} c_2 = 0$, which implies $c_2 = 0$. The second boundary condition gives $u(L,t) = e^{-\lambda^2 t} [c_1 \sin (\lambda L/\alpha)] = 0$, which implies $\lambda = \alpha n \pi / L$.
+
+        Therefore, for each $n \in \mathbb Z$, we have a solution $u_n = e^{-(\alpha n \pi / L)^2 t} \sin (n \pi x / L)$. The general solution is given by a superposition of these modes, $u = \sum_{n=1}^\infty c_n u_n$, where the coefficients $c_n$ are given by the projection of the initial condition onto the eigenfunctions, $c_n = \frac{\langle u_n, f \rangle}{\langle u_n, u_n \rangle} = \frac{2}{L} \langle u_n, f \rangle$, where $\langle f, g \rangle = \int_0^L f(x) g(x) dx$. Hence, our full solution is given by 
+
+        $$u(x,t) = \sum_{n=1}^\infty c_n e^{-(\alpha n \pi / L)^2 t} \sin(n \pi x /L), \qquad c_n = \frac{2}{L} \int_0^L f(x) \sin(n \pi x / L) dx$$
+
+        The time-dependence for the $n$-th standing mode is $\exp(-n^2(t/t_\epsilon))$, where $t_\epsilon \equiv (L/\pi \alpha)^2$.
+
+        \end{solution}
+
+        % 1.b.
+        \item For $t > t_\epsilon$, find the mode that dominates the solution, and thus write down the approximate solution (in time and in space). Describe in words how an initial condition, which may not look like a sine wave, becomes the sine shape with the largeset wavelength fitting in between the boundaries. 
+        Sure, here is the fully typed up and formatted solution to problem 1.b. based on the outline you provided:
+
+        \begin{solution}
+            For \(t > t_\epsilon\), we want to find the mode that dominates the solution. This is given by the mode \(n\) that maximizes the ratio \(\langle u_n , u \rangle / \langle u_n , u_n \rangle\). 
+
+            The inner product \(\langle u_n , u \rangle\) can be written as 
+
+            \[
+            \langle u_n , u \rangle = \int_0^L e^{-n^2 t/t_\epsilon} \sin(n \pi x/L) \left[ \sum_m c_m e^{-m^2 t/t_\epsilon} \sin(m\pi x/L)\right]dx
+            \]
+
+            This simplifies to 
+
+            \[
+            \langle u_n , u \rangle = \sum_m c_m e^{-(m^2+n^2)t/t_\epsilon} \int_0^L \sin(n \pi x/L) \sin(m \pi x/L) dx = \frac{L}{2} c_n e^{-2n^2 t/t_\epsilon}
+            \]
+
+            Hence, we find that the lowest values of \(n\) quickly dominate for \(t > t_\epsilon\), and so we can approximate the full solution by \((2/L) c_n u_n\), where \(n\) is the smallest positive integer such that \(c_n \ne 0\). 
+
+            In words, this means that as time progresses, the heat distribution in the rod becomes increasingly dominated by the fundamental mode (the mode with the smallest non-zero \(n\)). This is because the higher modes decay more rapidly due to the \(e^{-n^2 t/t_\epsilon}\) factor in their time-dependence. 
+
+            Even if the initial condition does not look like a sine wave, it can always be decomposed into a sum of sine waves via the Fourier series. As time progresses, the higher modes decay, leaving only the fundamental mode. This is why the heat distribution eventually becomes a sine wave with the largest wavelength that fits between the boundaries of the rod. This is a general feature of the heat equation: over time, heat diffuses and smooths out any initial irregularities in the temperature distribution.
+        \end{solution}
+    \end{enumerate}
+\end{problem}
+
+% Problem 2
+\begin{problem}
+    Sound waves in a box satisfy 
+
+    \begin{align*}
+        \text{PDE: } && u_{tt} - c^2 \nabla^2 u = 0 \text{ in $V$} \\
+        \text{BC: } && u = 0 \text{ on $\partial V$}
+    \end{align*}
+
+    Use separation of variables to solve this problem for the following configurations and find the quantized frequency of oscillation $\omega$, where $\omega$ appears in the time dependence of the solution in the form of a sine or cosine of $\omega t$. 
+
+    \begin{enumerate}[label=(\alph*)]
+        % 2.a.
+        \item $V$ is a one-dimensional box: $0 < x < L$. 
+        \begin{solution}
+            For the 1D case we have $u_{tt} - c^2 u_{xx} = 0$ on the interval $x \in [0,L]$ with $u(0,t)=u(L,t)=0$. We make the ansatz $u(x,t)= X(x)T(t)$ so that our equation becomes $$XT''-c^2 X''T = 0 \quad \Rightarrow \quad \frac{T''}{T} = c^2 \frac{X''}{X} = -\omega^2$$
+
+            This gives us two ODEs. For the time dependence we have $T'' = -\omega^2 T$, whose solution is given by $$T(t) = A \cos \omega t + B \sin \omega t$$
+
+            For the space dependence we have $X'' = - \frac{\omega^2}{c^2} X$, whose solution is likewise given by $$X(x) = A \cos \frac{\omega}{c} x + B \sin \frac{\omega}{c} x$$
+
+            By our boundary condition we must have $X(0) = X(L) = 0$, hence it must be that $$X(x) = A \sin \frac{n \pi}{L} x$$
+
+            This then implies that $$\frac{\omega}{c} = \frac{n \pi}{L} \quad \Rightarrow \quad \omega = \frac{n \pi c}{L}, \quad n \in \{1, 2, \dots \}$$
+
+
+        \end{solution}
+        \item $V$ is a two-dimensional box: $0 < x < L$, $0 < y < L$. 
+        \begin{solution}
+            The 2D case is similar to the 1D case. We have $u_{tt} - c^2 (u_{xx} + u_{yy}) = 0$. We let $u(x, y, t) = X(x) Y(y) T(t)$, so that our equation becomes 
+
+            $$XYT''-c^2 (X''YT + XY''T) = 0 \quad \Rightarrow \quad \frac{T''}{T} = c^2 \left(\frac{X''}{X} + \frac{Y''}{Y}\right) = -\omega^2$$
+
+            The temporal solution is the same as before, $$T(t) = A \cos \omega t + B \sin \omega t$$
+
+            For the spatial dependence we have $$\frac{X''}{X}+ \frac{Y''}{Y} = - \frac{\omega^2}{c^2}$$
+
+            This PDE is also separable, and is equivalent to $$X'' = -\alpha^2 X, \qquad Y'' = -\beta^2 Y, \qquad \alpha^2 + \beta^2 =  \frac{\omega^2}{c^2}$$
+
+            We can satisfy the summation criteria by letting $\alpha = \frac{\omega}{c} \cos \phi$ and $\beta = \frac{\omega}{c} \sin \phi$ for some constant $\phi$. With this, the general solution to these ODEs can be written as $$X(x) = A \cos \left(\cos \phi \frac{\omega}{c} x \right) + B \sin \left( \cos \phi\frac{\omega}{c} x \right)$$
+            $$Y(y) = A \cos \left(\sin \phi \frac{\omega}{c} y \right) + B \sin \left( \sin \phi\frac{\omega}{c} y \right)$$
+
+            To satisy our boundary conditions we must have $X(0) = Y(0)= X(L) = Y(L) = 0$, and hence our particular solutions in the spatial domain are given by $$X_n(x) = A \sin \left( \frac{n \pi}{L} x \right)$$
+            $$Y_m(y) = A \sin \left( \frac{m \pi}{L} y \right)$$
+
+            which means that we must have $$\cos \phi \frac{\omega}{c} = \frac{n \pi}{L} \quad \Rightarrow \quad \omega = \frac{n \pi c}{L\cos \phi}, \quad n \in \{1, 2, \dots \}$$
+            $$\sin \phi \frac{\omega}{c} = \frac{m \pi}{L} \quad \Rightarrow \quad \omega = \frac{m \pi c}{L\sin \phi}, \quad m \in \{1, 2, \dots \}$$
+
+            For these two $\omega$ expressions to be equivalent, we must have that $\phi = \arctan\left( \frac{m}{n} \right)$, so that $$\omega = \frac{m \pi c}{L \sin (\arctan \frac{m}{n})} = \frac{n \pi c}{L \cos(\arctan\frac{m}{n})} = \frac{\pi c \sqrt{n^2 + m^2}}{L}$$
+
+            Hence the quantized frequency of oscillation $\omega$ is given by 
+
+            $$\omega = \frac{\pi c \sqrt{n^2 + m^2}}{L} \qquad n, m \in \{1, 2, \dots \}$$
+
+        \end{solution}
+        \item $V$ is a three-dimensional box: $0 < x < L$, $0 < y < L$, $0 < z < L$. 
+        \begin{solution}
+            For the 3D case we have $u_{tt} - c^2(u_{xx} + u_{yy} + u_{zz}) = 0$. We let $u(x,y,z,t) = X(x)Y(y)Z(z)T(t)$, divide by $u$, and separate our equation into temporal and spatial components as before, giving us $$\frac{T''}{T} = c^2 \left( \frac{X''}{X} + \frac{Y''}{Y} + \frac{Z''}{Z}\right) = -\omega^2$$
+
+            Once again our temporal solution will be given by $$T(t) = A \cos \omega t + B \sin \omega t$$
+
+            Our spatial dependence is given by $$\frac{X''}{X}+ \frac{Y''}{Y} + \frac{Z''}{Z} = - \frac{\omega^2}{c^2}$$
+
+            This is another separable PDE, which is equivalent to the triplet of ODES $$X'' = - \alpha^2 X, \qquad Y'' = -\beta^2 Y, \qquad Z'' = - \gamma^2 Z$$
+
+            where $\alpha^2 + \beta^2 + \gamma^2 = \frac{\omega^2}{c^2}$. These ODEs all have trigonometric solutions as seen in earlier sections, and we can satisfy the condition imposed on the separation constants by letting $$\alpha = \frac{\omega}{c}\cos \varphi \cos \phi, \qquad \beta = \frac{\omega}{c}\cos \varphi \sin \phi, \qquad \gamma = \frac{\omega}{c}\sin \varphi$$
+
+            With this, we may write our spatial general solutions as 
+            
+            \begin{align*}
+                X(x) &= A \cos \left( \cos \varphi \cos \phi \frac{\omega}{c} x\right) + B \sin \left( \cos \varphi \cos \phi \frac{\omega}{c} x\right) \\
+                Y(y) &= A \cos \left( \cos \varphi \sin \phi \frac{\omega}{c} x\right) + B \sin \left( \cos \varphi \sin \phi \frac{\omega}{c} x\right) \\
+                Z(z) &= A \cos \left( \sin \varphi \frac{\omega}{c} x\right) + B \sin \left( \sin \varphi \frac{\omega}{c} x\right)
+            \end{align*}
+
+            However, our boundary conditions require that 
+
+            \begin{align*}
+                X_n(x) &= A \sin \left( \frac{n \pi}{L} x\right) \\
+                Y_m(y) &= A \sin \left( \frac{m \pi}{L} x\right) \\
+                Z_l(z) &= A \sin \left( \frac{l \pi}{L} x\right)
+            \end{align*}
+
+            Hence, we must have 
+            
+            $$\cos \varphi \cos \phi \frac{\omega}{c} = \frac{n \pi}{L} \quad \Rightarrow \quad \omega = \frac{n \pi c}{L\cos \phi \cos \varphi}, \quad n \in \{1, 2, \dots \}$$
+            
+            $$\cos \varphi \sin \phi \frac{\omega}{c} = \frac{m \pi}{L} \quad \Rightarrow \quad \omega = \frac{m \pi c}{L\sin \phi \cos \varphi}, \quad m \in \{1, 2, \dots \}$$
+
+            $$\sin \varphi \frac{\omega}{c} = \frac{l \pi}{L} \quad \Rightarrow \quad \omega = \frac{l \pi c}{L\sin \varphi }, \quad l \in \{1, 2, \dots \}$$
+
+            For all of these to hold true, we must have $$\frac{n}{\cos \phi \cos \varphi} = \frac{m}{\sin \phi \cos \varphi} = \frac{l}{\sin \varphi}$$
+
+            which holds provided that $$\phi = \arctan\left( \frac{m}{n}\right), \qquad \varphi = \arctan\left( \frac{l}{\sqrt{m^2 + n^2}} \right)$$
+
+            Substituting these in to our expressions for $\omega$ and simplifying, we find 
+
+            $$\omega = \frac{\pi c \sqrt{n^2 + m^2 + l^2}}{L}, \qquad n, m, l \in \{1, 2, \dots \}$$
+        \end{solution}
+    \end{enumerate}
+\end{problem}
+
+% Problem 3
+\begin{problem}
+    \begin{enumerate}[label=(\alph*)]
+        %3.a.
+        \item Solve: $$u_{xx} + (k_0^2 + i \varepsilon k_0/c) u = -\delta(x-y)/c^2, \qquad -\infty < x < \infty, \quad \varepsilon > 0, \quad y < \infty$$
+        subject to the boundary condition $u \rightarrow 0 $ as $x \rightarrow \pm \infty$. Consider separately $x < y$ and $x > y$, and matching across $x=y$. Do not use Fourier transform. 
+        \begin{solution}
+            For $x \ne y$, we have $$u_{xx} = -(k_0^2 + i \varepsilon k_0/c) u$$
+
+            This second order ODE has solutions of the form $$u_{xx} = \exp \left( \pm i \sqrt{k_0^2 + i \varepsilon k_0/c} x\right) = \exp \left( \pm \left[ i k_0 - \frac{\varepsilon}{2c} + \dots \right] x\right)$$
+
+            From our boundary conditions as $x \rightarrow \pm \infty$, this implies $$u = \begin{cases}
+                A \exp \left(-i \sqrt{k_0^2 + i \varepsilon k_0/c} x\right) & x < y \\\\
+                B \exp \left( i \sqrt{k_0^2 + i \varepsilon k_0/c} x\right) & x > y
+            \end{cases}$$
+
+            Additionally, we assume a continuous solution at $x=y$, which we can reflect by writing 
+
+            $$u = \begin{cases}
+                A \exp \left(-i \sqrt{k_0^2 + i \varepsilon k_0/c} (x-y)\right) & x < y \\\\
+                A \exp \left( i \sqrt{k_0^2 + i \varepsilon k_0/c} (x-y)\right) & x > y
+            \end{cases}$$
+
+            We now consider the integral over the infinitesimal region $[y-\epsilon, y+\epsilon]$,
+
+            \begin{align*}
+                \int_{y-\epsilon}^{y+\epsilon} \left[ u_{xx} + (k_0^2 + i \varepsilon k_0/c) u \right] dx &= - \int_{y-\epsilon}^{y+\epsilon} \delta(x-y)/c^2 \\
+                u_x \Big|_{y-\epsilon}^{y+\epsilon} = u_x^+ - u_x^- &= - \frac{1}{c^2}
+            \end{align*}
+
+            This negative jump in the derivative of $u$ enables us to compute the coefficient value $A$. We have 
+
+            \begin{align*}
+                -\frac{1}{c^2} = u_x^+ - u_x^- &=  2i \sqrt{k_0^2 + i \varepsilon \frac{k_0}{c}} A && \Rightarrow && A = \frac{i}{2 c \sqrt{c^2k_0^2 + i \varepsilon c k_0}}
+            \end{align*}
+
+            Hence our solution is given by $$u = \begin{cases}
+                \frac{i}{2 c \sqrt{c^2k_0^2 + i \varepsilon c k_0}} \exp \left(-i \sqrt{k_0^2 + i \varepsilon k_0/c} (x-y)\right) & x < y \\\\
+                \frac{i}{2 c \sqrt{c^2k_0^2 + i \varepsilon c k_0}} \exp \left( i \sqrt{k_0^2 + i \varepsilon k_0/c} (x-y)\right) & x > y
+            \end{cases}$$
+        \end{solution}
+
+        % 3.b.
+        \item Solve the above equation for the case of $\varepsilon = 0$, subject to the Sommerfeld radiation condition. Show that the solution from (a) reduces to this solution as $\varepsilon \rightarrow 0$. 
+        \begin{solution}
+            For this case we have $$u_{xx} + k_0^2 u = - \delta(x-y)/c^2$$
+
+            subject to the Sommerfeld radiation condition, $$\lim_{|x|\rightarrow \infty} \left( \frac{\partial}{\partial |x|} - ik_0 \right) u = 0$$
+
+            As before, we split our domain into two regions which are split by $x=y$. For $x\ne y$ we have in both regions that 
+
+            $$u_{xx} = -k_0^2 u \quad \Rightarrow \quad u = A e^{ik_0 x}+ B e^{-ik_0 x}$$
+
+            We now apply the Sommerfeld radiation condition, which is equivalent to $$\lim_{x \rightarrow - \infty} u_x = - ik_0 u \qquad \text{ and } \qquad \lim_{x \rightarrow \infty} u_x = ik_0 u$$
+
+            For $x < y$ this means that $A=0$, while for $x >y$ this we must have $B=0$, hence by continuity we must have $$u = \begin{cases}
+                A e^{-ik_0 (x-y)} & x< y \\\\
+                A e^{ik_0 (x-y)} & x > y
+            \end{cases}$$
+
+            To solve for our remaining coefficient, we can integrate over the infinitesimal region $[y-\epsilon, y+\epsilon]$.
+
+            \begin{align*}
+                \int_{y-\epsilon}^{y+\epsilon} \left[ u_{xx} + k_0^2 u \right]dx &= -\int_{y-\epsilon}^{y+\epsilon} \left[ \delta(x-y)/c^2 \right]dx \\
+                u_{xx} \Big|_{y-\epsilon}^{y+\epsilon} = u_x^+ - u_x^- &= - \frac{1}{c^2}
+            \end{align*}
+
+            Differentiating our expression for $u$ and plugging it in gives us $$u_x^+ - u_x^- = ik_0 A + ik_0 A = 2i k_0 A = - \frac{1}{c^2} \quad \Rightarrow \quad A = \frac{i}{2c^2 k_0}$$
+
+            Hence our solution is given by $$u = \begin{cases}
+                \frac{i}{2c^2 k_0} e^{-ik_0 (x-y)} & x< y \\\\
+                \frac{i}{2c^2 k_0} e^{ik_0 (x-y)} & x > y
+            \end{cases}$$
+
+            Comparing this with out solution found for (a) we note that it does indeed reduce to this solution for $\varepsilon \rightarrow 0$, which can be seen by simply substituting $\varepsilon = 0$ in the (a) solution and simplifying.
+        \end{solution}
+    \end{enumerate}
+\end{problem}
+
+\end{document}

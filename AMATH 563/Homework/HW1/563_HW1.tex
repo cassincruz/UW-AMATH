@@ -1,0 +1,209 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+
+% Page layout
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Lucas Cassin Cruz Burke}
+\rhead{AMATH 563}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
+
+% Theorem environments
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\theoremstyle{remark}
+\newtheorem*{solution}{Solution}
+
+\title{AMATH 563 Homework 1}
+\author{Lucas Cassin Cruz Burke}
+\date{April 14, 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{problem}
+    Prove that $C([a,b])$ equipped with the $L^2([a,b])$ norm is not a Banach space.
+\end{problem}
+\begin{solution}
+    To show that $C([a,b])$ equipped with the $L^2([a,b])$ norm is not a Banach space it is sufficient to show that $C([a,b])$ is not complete. That is, there exists a Cauchy sequence of functions $(f_i \in C([a,b]))_{i=1}^\infty$ which converges to a limit function $f \notin C([a,b])$. 
+
+    Consider the following discontinuous step function defined on the $[a,b]$ interval.
+
+    $$f(x) = \begin{cases} 0, & x \in [a, \frac{a+b}{2}) \\ 1, & x \in [\frac{a+b}{2}, b] \end{cases}$$
+
+    A standard result from Fourier theory is that step functions over finite intervals can be constructed using a Fourier series. In particular, $f(x)$ can be can be constructed as the limit as $i \rightarrow \infty$ of the sequence of Fourier partial sums defined by
+
+    $$f_i(x)= \frac{1}{2}+\frac{2}{\pi}\sum_{n=0}^{i}\frac{1}{2n+1}\sin\left(\frac{\left(2n+1\right)\pi}{b-a}\left(x-\frac{a+b}{2}\right)\right)$$
+
+    As finite sums of analytic functions, it is clear that $f_i \in C([a,b])$ for all $i \in \mathbb N$. Furthermore the convergence properties of the Fourier series imply that the sequence of partial sums converges to $f(x)$. Since the sequence converges, it is a Cauchy sequence. However, the limit function $f(x)$ is discontinuous, and so it does not belong to $C([a,b])$. 
+
+    We have found a Cauchy sequence $f_i \in C([a,b])$ which converges in the $L^2([a,b])$ norm to a discontinuous function $f \notin C([a,b])$. This shows that $C([a,b])$ equipped with the $L^2([a,b])$ norm is not a Banach space. 
+\end{solution}
+
+\begin{problem}
+    If $(X_1, ||\cdot||_1)$ and $(X_2, ||\cdot||_2)$ are normed spaces, show that the (Cartesian) product space $X=X_1 \times X_2$ becomes a normed space with the norm $||x|| = \max(||x_1||_1, ||x_2||_2)$ where $x\in X$ is defined as the tuple $x=(x_1,x_2)$ with addition and scalar multiplication operations $(x_1, x_2)+(y_1, y_2) = (x_1+x_2, y_1+y_2)$ and $\alpha(x_1, x_2) = (\alpha x_1, \alpha x_2)$. 
+\end{problem}
+\begin{solution}
+    To begin, we note that the product space $X$ equipped with binary addition and scalar multiplication operations as defined forms a vector space. To show that $(X, ||\cdot||)$ is a normed space we must show that $||\cdot||$ satisfies the following norm axioms:
+    \begin{enumerate}
+        \item $||x||\ge 0$: We have $||x|| = \max(||x_1||_1, ||x_2||_2)$. Since $||\cdot||_1$ and $||\cdot||_2$ are norms it follows by definition that $||x_1||_1, ||x_2||_2 \ge 0$ for all $x_1, x_2$. Hence $\max(||x_1||_1, ||x_2||_2) \ge 0$, so $||x|| \ge 0$. 
+        \item $||x||=0 \Leftrightarrow x=0$: Since $||x_1||_1, ||x_2||_2 \ge 0$ we have that $||x||=\max(||x_1||_1, ||x_2||_2) = 0$ only if $||x_1||_1 = ||x_2||_2 = 0$, and since $||\cdot||_1$ and $||\cdot||_2$ are both norms this implies that $x_1=x_2=0$, and hence that $x=0$. Conversely, if $x=0=(0,0)$ we have $||x||=\max(||0||_1, ||0||_2)=\max(0,0)=0$. This proves that $||x||=0 \Leftrightarrow x=0$.
+        \item $\forall \alpha \in \mathbb R: ||\alpha x|| = |\alpha| \cdot ||x||$: We have $||\alpha x|| = ||\alpha (x_1, x_2)|| = ||(\alpha x_1, \alpha x_2)|| = \max(||\alpha x_1||_1, ||\alpha x_2||_2) = \max(|\alpha| \cdot ||x_1||_1, |\alpha|\cdot||x_2||_2) =  
+        |\alpha| \max(||x_1||_1, ||x_2||_2) = |\alpha| \cdot ||x||$. 
+        \item The triangle inequality, $||x + x'|| \le ||x||+||x'||$: We have $||x+x'|| = ||(x_1 + x_1', x_2+x_2')|| = \max(||x_1+x_1'||_1, ||x_2+x_2'||_2)$. Since $||\cdot||_1$ and $||\cdot||_2$ are norms, we can use the triangle inequality for each of them, resulting in $\max(||x_1+x_1'||_1, ||x_2+x_2'||_2) \le \max(||x_1||_1+||x_1'||_1, ||x_2||_2+||x_2'||_2)$. Hence $||x+x'|| \le ||x|| + ||x'||$ and so $||\cdot||$ satisfies the triangle inequality.
+    \end{enumerate}
+
+    Since the norm $||\cdot||$ satisfies the four norm axioms it follows that $(X, ||\cdot||)$ is a normed space.
+\end{solution}
+
+\begin{problem}
+    Show that the product (composition) of two linear operators, if it exists, is a linear operator.
+\end{problem}
+\begin{solution}
+    Let $f: X \rightarrow Y$ and $g: Y \rightarrow Z$ be linear operators. Now consider the composition $g \circ f : X \rightarrow Z$. Let $x_1, x_2 \in X$, then we have 
+
+    $$g \circ f (x_1 + x_2) = g(f(x_1+x_2)) = g(f(x_1)+f(x_2)) = g(f(x_1))+ g(f(x_2)) = g \circ f(x_1) + g \circ f(x_2)$$
+
+    Hence $g \circ f$ satisfies the additive property. Additionally, we have for $x \in X$
+
+    $$g \circ f (\alpha x) = g(f(\alpha x)) = g(\alpha f(x)) = \alpha g(f(x)) = \alpha g \circ f(x)$$
+
+    Hence $g \circ f$ satisfies homogeneity of scalar multiplication. Since it satisfies these properties by definition $g \circ f$ is a linear operator. Hence, the product of any two linear operators, if it exists, is a linear operator.
+\end{solution}
+
+\begin{problem}
+    Let $T:X\rightarrow Y$ be a linear operator and $\dim X=\dim Y=n < \infty$. Show that the $\operatorname{Range}(T)=Y$ if and only if $T^{-1}$ exists.
+\end{problem}
+\begin{solution}
+    We will begin by showing that $\operatorname{Range}(T)=Y \implies \exists T^{-1}$, and then we will prove the reverse implication. First, we note that if $\operatorname{Range}(T)=Y$ then by definition $T$ is surjective. Now fix some $y \in Y$ and let $x_1, x_2 \in X$ be two vectors such that $T(x_1)=T(x_2)=y$. Subtracting $T(x_2)$ and applying the linearity property of $T$ gives us 
+
+    $$T(x_1) - T(x_2) = T(x_1-x_2)=0$$
+
+    Hence $x_1-x_2$ lies in the nullspace of the operator $T$. We recall that for finite dimensional linear maps the rank-nullity theorem states that 
+
+    \begin{align*}
+        \operatorname{Rank}(T) + \operatorname{Nullity}(T) = \dim X &= n \\
+        \Rightarrow n + \operatorname{Nullity}(T) &= n \\
+        \Rightarrow \operatorname{Nullity}(T) &= 0
+    \end{align*}
+
+    From this is follows that $x_1-x_2=0 \Rightarrow x_1=x_2$. Hence $T$ is also injective. Since $T$ is both injective and surjective it is a bijection, and there exists an inverse linear operator $T^{-1}$. 
+    
+    We will now show the reverse implication, $\exists T^{-1} \implies \operatorname{Range}(T) = Y$. In this case we have that $T$ is a bijection by definition, from which it follows that $T$ is surjective, and hence that $\operatorname{Range}(T) =Y$. 
+
+    Hence, we have $$\operatorname{Range}(T) = Y \Leftrightarrow \exists T^{-1}$$
+\end{solution}
+
+\begin{problem}
+    Let $T$ be a bounded linear operator from a normed space $X$ onto a normed space $Y$. Show that if there is a positive constant $b$ such that $||Tx|| \ge b||x||$ for all $x\in X$ then $T^{-1}$ exists and is bounded.
+\end{problem}
+\begin{solution}
+    We will begin by showing that $T^{-1}$ exists, that is, $T$ is a bijection. First, we note from the problem statement that $T$ is surjective by definition. Next, we note that $||Tx|| \ge b||x||$ implies that the null space of $T$ is trivial. Now let $x_1, x_2 \in X$ such that $Tx_1=Tx_2$, then by the linearity of $T$ we have $T(x_1-x_2) = 0$. Since the null space of $T$ is trivial we must have $x_1 = x_2$, and so $T$ is injective. Since $T$ is both injective and surjective, it is a bijection and hence $T^{-1}$ exists. 
+
+    We will now show that $T^{-1}$ satisfying the problem statement is necessarily bounded. Let $Tx = y$, then from the problem statement we have $||Tx||= ||y|| \ge b||x||$. Then, using $x=T^{-1}y$, we have $||y|| \ge b||T^{-1} y||$ and hence 
+
+    $$||T^{-1}y|| \le \frac{1}{b} ||y||$$
+
+    This inequality holds for all $y \in Y$, which means that $T^{-1}$ is bounded. 
+\end{solution}
+
+\begin{problem}
+    Consider the functional $f(x) = \max_{t \in [a,b]} x(t)$ on $C([a,b])$ equipped with the $\sup$ norm. Is this functional linear? Is it bounded?
+\end{problem}
+\begin{solution}
+    $f$ is not linear, but it is bounded. 
+
+    To show this, we will begin with the conditions for linearity. $f(x)$ satisfies the additivity property. That is, for $x, y \in C([a,b])$, 
+
+    $$f(x+y) = \max_{t  \in [a,b]} [ x(t) + y(t)] = \max_{t \in [a,b]} x(t) + \max_{t\in[a,b]}y(t) = f(x)+ f(y)$$
+
+    However, $f$ is not invariant under scalar multiplication. Instead, we have 
+
+    $$f(\alpha x) = \max_{t \in [a,b]} \alpha x(t) = |\alpha| \max_{t\in[a,b]} \operatorname{sgn}(\alpha) x(t) = |\alpha| f(\operatorname{sgn}(\alpha)x) \ne \alpha f(x)$$
+
+    It follows that $f$ is not a linear functional. 
+
+    We continue now to the question of boundedness. Using the $\sup$ norm we have $||x|| = \sup_{t\in[a,b]}|x(t)|$. We note that 
+
+    $$f(x) = \max_{t\in[a,b]}x(t) \le \sup_{t\in[a,b]}|x(t)| = ||x||$$
+
+    from which it follows that 
+
+    $$||f(x)|| \le ||x||$$
+
+    and so $f$ is bounded.
+\end{solution}
+
+
+
+\begin{problem}
+    Let $X$ be a Banach space and denote its dual as $X^*$. Show that $||\varphi||:\varphi \mapsto \sup_{||x||=1}|\varphi(x)|$ is a norm on $X^*$. 
+\end{problem}
+\begin{solution}
+    We recall the axioms which define the vector norm:
+    \begin{enumerate}
+        \item $||\varphi|| \ge 0$: We have $||\varphi|| = \sup_{||x||=1}|\varphi(x)|$, and so since $|\varphi(x)| \ge 0$ it follows that $||\varphi|| \ge 0$. 
+        \item $||\varphi||=0 \Leftrightarrow \varphi(x)=0$: We have 
+        
+        $$||\varphi|| = \sup_{||x||=1}|\varphi(x)| = 0 \implies \varphi(x)=0.$$ 
+        
+        We also have 
+        
+        $$\varphi(x) =0 \implies \sup_{||x||=1}|\varphi(x) = ||\varphi|| = 0.$$ 
+
+        Hence we have $||\varphi||=0 \Leftrightarrow \varphi(x)=0$.
+        \item $||\alpha \varphi|| = |\alpha| \cdot ||\varphi||$: We have 
+        
+        $$||\alpha \varphi|| = \sup_{||x|| =1}|\alpha \varphi(x)| = |\alpha| \cdot \sup_{||x||=1}|\varphi(x)| = |\alpha| \cdot ||\varphi||$$
+
+        \item Triangle inequality $||x + x'|| \le ||x||+||x'||$: We have
+        \begin{align*}
+            ||\varphi + \phi|| = \sup_{||x||=1}|\varphi(x)+\phi(x)| &\le \sup_{||x||=1}\bigg[|\varphi(x)| + |\phi(x)|\bigg] \\
+            &\le \sup_{||x||=1} |\varphi(x)| + \sup_{||x||=1}|\phi(x)|\\
+            &\le ||\varphi|| + ||\phi||
+        \end{align*}
+
+        Hence $||\cdot||$ satisfies the triangle inequality.
+    \end{enumerate}
+
+    Since the given functional satisfies all of the above properties, it is indeed a norm on $X^*$. 
+\end{solution}
+
+\begin{problem}
+    Prove the Schwartz inequality on inner product spaces: $|\langle x, y \rangle| \le ||x|| \cdot ||y||$ for all $x, y \in X$, where equality holds if and only if $x, y$ are linearly dependent.
+\end{problem}
+\begin{solution}
+    Consider any two vectors $x, y \in X$. We define the projection
+
+    \begin{align*}
+        y_{||} = \frac{\langle x, y \rangle}{||x||^2} \cdot x = \alpha x && y_{\perp} = y-y_{||}
+    \end{align*}
+    
+    Using this, we can write the inner product as
+
+    $$\langle x, y \rangle = \langle x, y_{||} + y_{\perp} \rangle = \langle x, y_{||} \rangle + \langle x, y_{\perp} \rangle = \langle x, y_{||} \rangle = \alpha \langle x, x \rangle$$
+
+    from which it follows that
+
+    $$|\langle x, y \rangle | = |\alpha| \cdot ||x||^2 = |\alpha | \cdot ||x|| \cdot ||x|| = ||x|| \cdot ||y_{||}||$$
+
+    Now, in the case where $x, y$ are linearly dependent we have $y = y_{||}$ and hence $|\langle x, y \rangle | = ||x|| \cdot ||y_{||}|| = ||x|| \cdot ||y||$. If $x$ and $y$ are not linearly dependent then $y_{\perp} \ne 0$, and therefore $||y|| = ||y_{||} + y_{\perp}|| > ||y_{||}||$, where the inequality is guaranteed by the orthogonality of $y_{||}$ and $y_{\perp}$. From this it follows that 
+
+    $$|\langle x, y \rangle | = ||x|| \cdot ||y_{||}|| \le ||x|| \cdot ||y||$$
+
+    which gives us the Schwartz inequality 
+
+    $$\forall x, y \in X: |\langle x, y \rangle | \le ||x|| \cdot ||y||$$
+
+    where the equality holds if and only if $x,y$ are linearly dependent.
+\end{solution}
+
+\end{document}

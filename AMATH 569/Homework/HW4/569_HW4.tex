@@ -1,0 +1,294 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+\usepackage{enumerate}
+
+% Page layout
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Lucas Cassin Cruz Burke}
+\rhead{AMATH 569}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
+
+% Theorem environments
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\theoremstyle{remark}
+\newtheorem*{solution}{Solution}
+
+\title{AMATH 569 Homework 4}
+\author{Lucas Cassin Cruz Burke}
+\date{May 10, 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{problem}
+    The Green's function of the 1D heat equation in a semi-infinite domain, $G(x, t; \xi, \tau)$ is defined by $$G_t - DG_{xx} = \delta(x-\xi)\delta(t-\tau)$$
+
+    where $x, \xi \in (0, \infty)$ and $t, \tau > 0$, subject to the initial condition that $G=0$ at $t=0$, and the boundary condition of either 
+
+    \begin{enumerate}[(a)]
+        \item $G=0$ at $x=0$ and as $x\rightarrow \infty$. 
+        \item $G_x = 0$ at $x=0$ and as $x \rightarrow \infty$. 
+    \end{enumerate}
+
+    The solution in a semi-infinite domain can be constructed from the solution in the infinite domain by adding or subtracting another source located at $x=-\xi$, so that the contributions cancel at $x=0$ for (a), or the contributions are symmetrix about $x=0$ for (b). 
+
+    Find the Green's function defined above for boundary condition (a), and then repeat the problem for boundary condition (b). 
+\end{problem}
+\begin{solution}
+    To satisfy the boundary condition (a) we can add another source located at $x=-\xi$ which is negative, so that the contributions cancel at $x=0$. This gives us $$G_t - DG_{xx} = \delta(t-\tau)\left[\delta(x-\xi)-\delta(x+\xi)\right]$$
+
+    To solve this PDE we can Fourier transform in $x$. Let us define $$\hat G(k, t) = \int_{-\infty}^\infty e^{ikx} G(x,t) dx$$
+
+    Then, taking the Fourier transform of both sides of our equation and using the derivative properties of the Fourier transform, we reduce our PDE to the ODE $$\hat G_t + k^2 D \hat G = \delta(t-\tau)\left[ e^{ik\xi} - e^{-ik\xi}\right] = 2i \delta(t-\tau)\sin k \xi$$
+
+    For $t \ne \tau$, this reduces to the first order homogeneous ODE $$\hat G_t + k^2 D \hat G = 0$$
+
+    which has the general solution $$\hat G(k, t) = A e^{-k^2 D t}$$
+
+    For $t < \tau$ we must have $A = 0$ to satisfy our initial condition that $G=0$ at $t=0$. For $t>\tau$ we can integrate over a infinitesimally small duration around $\tau$ to find the coefficient which results from the impulse at time $\tau$. Letting $\epsilon \rightarrow 0^+$, we have 
+
+    \begin{align*}
+        \int_{\tau -\epsilon}^{\tau + \epsilon} \left[ \hat G_t + k^2 D \hat G \right]dt &= 2 i \sin k \xi \\
+        \left. \hat G \right|_{\tau - \epsilon}^{\tau + \epsilon} + k^2 D \int_{\tau -\epsilon}^{\tau + \epsilon} \hat G dt &= 2 i \sin k \xi \\
+        \hat G(\tau + \epsilon) &= 2 i \sin k\xi
+    \end{align*} 
+
+    where we have used $\hat G(k, t) = 0$ for $t < \tau$. Hence we conclude that 
+
+    $$\hat G(k, t) = \begin{cases}
+        0 & t < \tau \\
+        2 i e^{-k^2 D(t-\tau)} \sin k \xi  & t > \tau
+    \end{cases}$$
+
+    We can now perform the inverse Fourier transform in $x$ to recover our Green's function $G(x,t)$. For $t < \tau$ we have $G(x,t)=0$ trivially. For $t > \tau$ we have 
+
+    $$G(x,t) = \frac{i}{\pi} \int_{-\infty}^\infty dk e^{-ikx}e^{-k^2 D(t-\tau)} \sin k\xi$$
+
+    Let us write the $\sin k \xi$ term as a complex exponential, then our integral becomes 
+
+    $$G(x,t) = \frac{1}{2 \pi} \int_{-\infty}^\infty  \exp \left\{ -ikx -k^2 D(t-\tau) \right\} \left[ \exp\{ ik \xi \} - \exp \{ -ik\xi \} \right]dk$$
+
+    Now let us define $I_{\pm}$ by 
+
+    $$I_{\pm} = \int_{-\infty}^\infty \exp \left\{ -k^2 D(t-\tau) + i k ( \pm \xi - x) \right\} dk$$
+
+    So that $$G(x,t) = \frac{1}{2 \pi} \left( I_+ - I_-\right)$$
+
+    To evaluate the $I_\pm$ integral we can complete the square in the exponential and write it as 
+
+    $$I_\pm = \exp \left\{ - \frac{(\xi \mp x)^2}{4D(t-\tau)} \right\} \int_{-\infty}^\infty \exp\left\{ -D(t-\tau) \left( k \mp \frac{i (\xi \mp x)}{2D(t-\tau)} \right)^2 \right\} dk$$
+
+    Then, making a couple of u-substitutions and exploiting the fact that Gaussian integrals are invariant under shifts in the complex plane, we may write our integral as 
+
+    $$I_\pm = \frac{1}{\sqrt{D(t-\tau)}} \exp \left\{ - \frac{(\xi \mp x)^2}{4D(t-\tau)} \right\} \int_{-\infty}^\infty \exp \left\{ - \phi^2 \right\} d\phi = \sqrt{\frac{\pi}{D(t-\tau)}} \exp \left\{ - \frac{(\xi \mp x)^2}{4D(t-\tau)} \right\}$$
+
+    Plugging this into our above expression, we find our final solution for the Green's function to be 
+
+    \begin{align*}
+        G(x,t) = \begin{cases} 0 & t < \tau \\ \frac{1}{2 \sqrt{\pi D(t-\tau)}} \left[\exp \left\{ - \frac{(\xi - x)^2}{4D(t-\tau)} \right\} - \exp \left\{ - \frac{(\xi + x)^2}{4D(t-\tau)} \right\} \right] & t > \tau \end{cases}
+    \end{align*}
+
+    This matches our expectation, since we know from the last assignment that the Green's function of the heat equation is a Gaussian with variance $t-\tau$, it follows from linearity that an antisymmetric sum of two such Gaussian's is a valid solution to the heat equation which moreover matches our boundary condition at $x=0$ by its anti-symmetry. 
+\end{solution}
+
+\begin{solution}
+    To satisfy the boundary condition (b) we repeat the same process as above, but this time choose the image source to be of matching positive sign so that our equation is symmetric on the $x$-axis. This gives us the PDE 
+
+    $$G_t - DG_{xx} = \delta(t-\tau)\left[ \delta(x-\xi)+\delta(x+\xi)\right]$$
+
+    As before, we can Fourier transform both sides of the equation, resulting in an ODE for the Fourier solution $\hat G(k,t)$:
+
+    $$\hat G_t + k^2 D \hat G = \delta(t-\tau)\left[ e^{ik\xi} + e^{-ik\xi}\right] = 2 \delta(t-\tau) \cos(k\xi)$$
+
+    For $t\ne \tau$ this reduces to the first order linear homogeneous ODE 
+
+    $$\hat G_t + k^2 D\hat G = 0$$
+
+    which has the general exponential solution 
+
+    $$\hat G(k,t) = A e^{- k^2 D t}$$
+
+    For $t< \tau$ we must have $A=0$ to satisfy our initial condition that $G=0$ at $t=0$. To find the coefficient for $t>\tau$, we integrate over an infinitesimal duration around the time $\tau$, as such:
+
+    \begin{align*}
+        \int_{\tau-\epsilon}^{\tau + \epsilon} \left[ \hat G_t + k^2 D \hat G \right] dt &= \int_{\tau-\epsilon}^{\tau+\epsilon} 2 \delta(t-\tau) \cos(k\xi) dt \\
+        \Rightarrow \hat G(\tau + \epsilon) &= 2 \cos(k\xi)
+    \end{align*}
+
+    Hence for $t>\tau$ our solution in Fourier space is given by 
+
+    $$\hat G(k,t) = 2\cos(k\xi) e^{-k^2 D (t-\tau)}$$
+
+    The final step is to recover our solution $G(x,t)$ by taking the inverse Fourier transform of $\hat G(k,t)$. For $t< \tau$ the solution is $G(x,t)=0$ trivially. For $t>\tau$ we have 
+
+    \begin{align*}
+        G(x,t) &= \frac{1}{2\pi} \int_{-\infty}^\infty e^{-ikx} \cdot 2 \cos(k\xi) e^{-k^2 D(t-\tau)} dk\\
+        &= \frac{1}{2\pi} \int_{-\infty}^\infty \exp \left\{-ikx -k^2 D(t-\tau) \right\} \left[ \exp\left\{ ik\xi \right\} + \exp\left\{ -ik\xi \right\} \right] dk
+    \end{align*}
+
+    As before, we define $I_{\pm}$ by 
+
+    $$I_{\pm} = \int_{-\infty}^\infty \exp\left\{-k^2 D(t-\tau) + ik(\pm \xi -x) \right\} dk$$
+
+    So that our solution is given by 
+
+    $$G(x,t) = \frac{1}{2\pi}\left[ I_+ + I_-\right]$$
+
+    This is the same integral which we evaluated in part (a), where we found 
+
+    $$I_{\pm} = \sqrt{\frac{\pi}{D(t-\tau)}}\exp \left\{ -\frac{(\xi\mp x)^2}{4D(t-\tau)}\right\}$$
+
+    Hence using this we may write our solution $G(x,t)$ as 
+
+    $$G(x,t) = \begin{cases}
+        0 & t < \tau \\
+        \frac{1}{2 \sqrt{\pi D(t-\tau)}} \left[\exp \left\{ - \frac{(\xi - x)^2}{4D(t-\tau)} \right\} + \exp \left\{ - \frac{(\xi + x)^2}{4D(t-\tau)} \right\} \right] & t > \tau
+    \end{cases}$$
+\end{solution}
+
+\begin{problem}
+    Find the Greens function for the wave equation in two dimensions governed by $$G_{tt}-G_{xx}-G_{yy} = \delta(t)\delta(x)\delta(y)$$
+
+    such that $G \rightarrow 0$ as $r \rightarrow \infty$, where $r^2 = x^2 + y^2$, and $G=0$ for $t<0$. 
+\end{problem}
+\begin{enumerate}[(a)]
+    \item Derive the solution using a Fourier transform in $x$ and $y$.
+
+    \begin{solution}
+         Let us define $\mathbf r = \begin{bmatrix}
+            x \\ y
+         \end{bmatrix}$ and $\mathbf k = \begin{bmatrix}
+            k_x \\ k_y
+         \end{bmatrix}$. Then the Fourier transform of $G$ is given by 
+
+         $$\hat G(k_x, k_y, t) = \int_{\mathbb R^2} e^{i\mathbf k \cdot \mathbf r} G(x, y, t) dx dy$$
+
+         Taking the Fourier transform of both sides of the above wave equation, we have 
+
+         $$\hat G_{tt} + k^2 \hat G = \delta(t)$$
+
+         where $k=||\mathbf k|| = \sqrt{k_x^2 + k_y^2}$ is the Euclidean norm of $\mathbf k$. 
+
+         This is a second order linear ODE in $t$. For $t \ne 0$ its general solution is given by 
+
+         $$\hat G = A \sin(kt) + B \cos(kt)$$
+
+         For negative time we must have $A=B=0$ to satisfy the boundary condition $G=0$ for $t<0$. For $t>0$ we can integrate our PDE over an infinitesimal duration $[-\epsilon, \epsilon]$ to find the coefficients $A$ and $B$. Assuming bounded $\hat G$, we have 
+
+         \begin{align*}
+            \int_{-\epsilon}^{+\epsilon} [\hat G_{tt} + k^2 \hat G] dt &= \int_{-\epsilon}^{+\epsilon} \delta(t)dt \\
+            \Rightarrow \hat G_t \Big|_{-\epsilon}^{+\epsilon} + k^2 \int_{-\epsilon}^{+\epsilon} \hat G dt &= 1 \\
+            \hat G_t(\epsilon) &= 1
+         \end{align*}
+
+         Hence we have $\hat G_t \rightarrow 1$ as $t \rightarrow 0$. From this we calculate 
+
+         \begin{align*}
+            \hat G_t(0) = -k A = 1 \Rightarrow A = -1/k
+         \end{align*}
+
+         Additionally, for $\hat G$ to be continous we must have $B=0$, which gives us the Fourier transformed solution 
+
+         $$\hat G(k_x, k_y, t) = \begin{cases}
+            0 & t<0 \\ 
+            -\frac{1}{k} \sin(kt) & t>0
+         \end{cases}$$
+
+         To obtain the Green's function $G(x,y,t)$ we need to perform the inverse Fourier transform in both $x$ and $y$:
+
+         \begin{align*}
+            G(x,y,t) &= -\frac{1}{4\pi^2} \int_{\mathbb R^2} e^{-i\mathbf k \cdot \mathbf r} \frac{1}{k} \sin(kt) dk_x dk_y
+         \end{align*}
+
+         Now we can express the vectors $\mathbf k$ and $\mathbf r$ in polar coordinates by making the variable substitutions 
+
+         \begin{align*}
+            k_x = k \cos \theta &&k_y = k \sin \theta && dk_x dk_y = k dk d\theta \\
+            x = r \cos \phi && y = r\sin \phi
+         \end{align*}
+         
+         which allows us to write 
+         
+         \begin{align*}
+            G(x,y,t) &= -\frac{1}{4\pi^2}\int_{0}^\infty \int_{0}^{2\pi}  e^{-i kr[\cos \phi \cos \theta + \sin \phi \sin \theta]} \sin(kt) d\theta dk \\
+            &= -\frac{1}{4\pi^2}\int_{0}^\infty \int_{0}^{2\pi}  e^{-i kr \cos(\phi-\theta)} \sin(kt) d\theta dk
+         \end{align*}
+
+         Now let us define $\varphi = \phi-\theta + \frac{\pi}{2}$, so that $\cos(\phi - \theta) = \cos(\varphi - \frac{\pi}{2}) = \sin\varphi$, and substitute $d \varphi = -d\theta$. Then we can write 
+
+         $$G(x,y,t) = \frac{1}{4 \pi^2} \int_0^\infty dk \sin(kt)\int_{-\pi}^{\pi}d\varphi e^{-ikr \sin \varphi}$$
+
+         However we recall the definition of the Bessel function $J_0$ as 
+
+         $$J_0(x) = \frac{1}{2\pi} \int_{-\pi}^\pi e^{-ix \sin \theta} d\theta$$
+
+         Comparing this with the above expression, we see that 
+
+         $$G(x,y,t) = \frac{1}{2\pi} \int_0^\infty J_0(kr) \sin(kt) dk$$
+
+         Looking this integral up in an integral table, we find our solution to be 
+
+         $$G(x,y,t) = \frac{1}{2\pi} \frac{H(t-r)}{\sqrt{t^2-r^2}},$$
+
+         where $H$ is the Heaviside function.
+    \end{solution}
+
+    \item Derive the solution using a Laplace transform in $t$. 
+    
+    \begin{solution}
+        Let us denote the Laplace transform of $G(x,y,t)$ as $\mathcal L[G] = \tilde G(x,y,s)$. Then our transformed equation becomes
+
+        $$s^2 \tilde G - \tilde G_{xx} - \tilde G_{yy} = \delta(x)\delta(y)$$
+
+        We can write this in polar coordinates by letting $x = r \cos \theta$ and $y = r \sin \theta$. Since our system is radially symmetric our solution must depend only on $r$. Hence, after converting to polar coordinates our equation becomes 
+
+        $$s^2 \tilde G - G_{rr} - \frac{1}{r} G_r = \delta(r)$$
+
+        For $r>0$ we have the homogeneous case, which we can multiply by $r^2$ to give 
+
+        $$r^2 \tilde G_{rr} + r \tilde G_r - r^2 s^2 \tilde G = 0$$
+
+        Now let us define $\xi = rs$ and rewrite the equation in terms of this new variable.
+
+        $$\xi^2 \tilde G_{\xi\xi} + \xi \tilde G_\xi - \xi^2 \tilde G = 0$$
+
+        We recognize this as the modified Bessel's equation for $n=0$, whose solutions are given by the modified Bessel functions $I_0(\xi)$ and $K_0(\xi)$. Hence we have
+
+        $$\tilde G(r, \theta, s) = c_1 I_0(sr) + c_2 K_0(sr)$$
+
+        To find the values of our coefficients, we integrate our equation over an infinitesimal disk centered around the origin. We have 
+
+        \begin{align*}
+            \int_0^{2\pi} \int_0^\epsilon [s^2 r \tilde G - r \tilde G_{rr} - \tilde G_r] dr d\theta &= \int_0^{2\pi} \int_0^\epsilon \delta(r) dr d\theta \\
+            \Rightarrow \quad -2\pi \int_0^\epsilon (r\tilde G_r)_r dr &= 1 \\
+            \Rightarrow \quad -2\pi r \tilde G_r\big|_{r=\epsilon} &= 1 \\
+            \Rightarrow \quad \tilde G_r(\epsilon) \rightarrow 1/\epsilon \quad \text{ as $\epsilon \rightarrow 0$.}
+        \end{align*}
+
+        We have $\frac{d}{dr} I_0(sr) \rightarrow 0$ as $sr \rightarrow 0$, and $ \frac{d}{dr} K_0(sr) \rightarrow - \frac{1}{r}$ as $sr \rightarrow 0$, hence we have
+
+        $$\lim_{\epsilon \rightarrow 0} -2 \pi r G_r = \lim_{\epsilon \rightarrow 0} 2 \pi c_2 = 1 \qquad \Rightarrow  \quad c_2 = \frac{1}{2\pi}$$
+
+        Hence we have the Laplace space solution 
+
+        $$\tilde G(r, \theta, s) = \frac{1}{2\pi} K_0(sr)$$
+
+        Looking this up in a Laplace transform table, we find our solution to again be 
+
+        $$G(x,y,t) = \frac{1}{2\pi} \frac{H(t-r)}{\sqrt{t^2-r^2}},$$
+
+        where $H$ is the Heaviside function. 
+    \end{solution}
+\end{enumerate}
+
+
+\end{document}

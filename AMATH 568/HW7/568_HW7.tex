@@ -1,0 +1,112 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage{fullpage}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{subcaption}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\title{{AMATH 568\\
+Advanced Differential Equations}\\
+{\bf \Huge Homework 7}}
+
+\author{Lucas Cassin Cruz Burke}
+
+\date{Due: March 3, 2023}
+
+\maketitle
+
+\begin{enumerate}
+    \item Consider the Optical Parametric Oscillator as given in Lecture 23 of the notes (pages 99-102).
+    
+    \begin{enumerate}
+        \item Assuming slow time $\tau = \epsilon^2 t$ and slow space $\xi = \epsilon x$, derive the Fisher-Kolmogorov equation for the slow equation of the instability (the expression after Eq. (518)). 
+        
+        \textbf{Solution:} The Optical Parametric Oscillator equation is given by 
+        
+        \begin{align*}
+            U_t &= \frac{i}{2} U_{xx} + VU^* - (1+i \Delta_1)U \\ V_t &= \frac{i}{2} \rho V_{xx} - U^2 - (\alpha + i\Delta_2)V + S
+        \end{align*}
+
+        The stable uniform steady-state response of the OPO is given by
+        \begin{align*}
+            U &= 0 \\ V &= \frac{S}{\alpha + i\Delta_2}
+        \end{align*}
+
+        It can be shown via linear stability analysis that this solution becomes unstable once the external pumping amplitude $|S|$ becomes greater than $|S_c|$, where $S_c$ is the critical pumping strength $$S_c = (\alpha + i\Delta_2)(1+i\Delta_1).$$ 
+
+        We consider an OPO system with an external pumping term $S$ near $S_c$, which we asymptotically expand as 
+
+        $$S = S_c + \epsilon^2 C + \mathcal O(\epsilon^3)$$
+
+        where $C$ is a constant and $0 < \epsilon \ll 1$. Next, we expand about the steady-state solution by letting 
+
+        \begin{align*}
+            U &= \epsilon u(\tau, \xi) +\mathcal O(\epsilon^3)\\ 
+            V &= \frac{S_c + \epsilon^2 C}{\alpha + i\Delta_2} + \epsilon^2 v(\tau, \xi) + \mathcal O(\epsilon^3) \\&= (1+i \Delta_1)(1+\epsilon^2 C/S_c) + \epsilon^2 v(\tau, \xi) + \mathcal O(\epsilon^3)
+        \end{align*}
+
+        where we have assumed the slow time $\tau = \epsilon^2 t$ and slow space $\xi = \epsilon x$. Plugging these in to the OPO equation and applying the chain rule $\partial_x \rightarrow \epsilon \partial_\xi$ and $\partial_t \rightarrow \epsilon^2 \partial_\tau$ results in the equations 
+
+        \begin{align*}
+            \epsilon^2 u_\tau &= \frac{i}{2} \epsilon^2 u_{\xi\xi} + u^* \left( \frac{S_c + \epsilon^2 C}{\alpha + i\Delta_2} + \epsilon^2 v \right) - (1+ i\Delta_1) u \\
+            \epsilon^2 v_\tau &= \frac{i}{2} \rho \epsilon^2 v_{\xi\xi} - u^2 - (\alpha + i\Delta_2) v 
+        \end{align*}
+
+        which we can manipulate to the form 
+
+        \begin{align}
+            (1+i \Delta_1)(u^*-u) &= \epsilon^2 \left(\frac{i}{2} u_{\xi\xi} - u_\tau + vu^* + \frac{C}{\alpha + i \Delta_2} u^* \right) \\
+            (\alpha + i\Delta_2)v &= -u^2 + \epsilon^2 \left( \frac{i}{2} \rho v_{\xi\xi} - v_\tau \right)
+        \end{align}
+
+        To leading order, (1) gives us 
+
+        \begin{align*}
+            (1+i \Delta_1) (u^* - u) &= \mathcal O(\epsilon^2) \\
+            \Rightarrow \Im(u) \sim \epsilon^2
+        \end{align*}
+        
+        Hence we conclude that $u$ is real to order $\mathcal O(1)$. Next, to leading order, (2) gives us 
+
+        \begin{align*}
+            (\alpha + i\Delta_2) v &= - u^2 \\
+            \Rightarrow v &= \frac{-u^2}{\alpha + i \Delta_2}
+        \end{align*}
+
+        Using this we may calculate $vu^*$ to $\mathcal O(1)$ as 
+
+        \begin{align*}
+            vu^* &= \frac{-u^2u^*}{\alpha + i \Delta_2} = \frac{-|u|^2u}{\alpha + i \Delta_2} + \mathcal O(\epsilon^2)
+        \end{align*}
+
+        Using these expressions for $u^*$ and $vu^*$ we can write the right hand forcing of (1) as 
+
+        \begin{align*}
+            R &= \epsilon^2 \left(\frac{i}{2} u_{\xi\xi} - u_\tau - \frac{u^3}{\alpha + i \Delta_2} + \frac{C}{\alpha + i \Delta_2} u \right) + \mathcal O(\epsilon^4)
+        \end{align*}
+
+
+        Note that since the null space of the adjoint of the leading $\mathcal O(1)$ governing equation is the space of all real functions, by the Fredholm Alternative theorem $R$ must be purely imaginary. Hence, at $\mathcal O(\epsilon^2)$ we have the governing equation
+        
+        \begin{align}
+            u_\tau = \frac{i}{2} u_{\xi\xi} + \frac{Cu - u^3}{\alpha+i\Delta_2}
+        \end{align}
+
+        We now perform the following coordinate transformations. Define the scaled function $\varphi$ by $u = \sqrt{\alpha + i \Delta_2} \varphi$, along with the scaled slow space $\zeta$ defined by $\zeta = \sqrt{\frac{2}{i}} \xi$. Additionally, define $\gamma = C/(\alpha + i\Delta_2)$. Then substituting $u \rightarrow \varphi$ and $\xi \rightarrow \zeta$ into the (2) gives us the \textbf{Fisher-Kolmogorov equation} for the slow equation of the instability.
+
+        \begin{align*}
+            \varphi_\tau = \varphi_{\zeta \zeta} + \gamma \varphi - \varphi^3
+        \end{align*}
+
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}

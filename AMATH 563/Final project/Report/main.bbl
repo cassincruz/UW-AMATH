@@ -1,0 +1,35 @@
+\begin{thebibliography}{1}
+
+\bibitem{graphlearning}
+J.~Calder.
+\newblock Graphlearning python package, Jan. 2022.
+
+\bibitem{pmlr-v119-calder20a}
+J.~Calder, B.~Cook, M.~Thorpe, and D.~Slepcev.
+\newblock Poisson learning: Graph based semi-supervised learning at very low
+  label rates.
+\newblock In H.~D. III and A.~Singh, editors, {\em Proceedings of the 37th
+  International Conference on Machine Learning}, volume 119 of {\em Proceedings
+  of Machine Learning Research}, pages 1306--1316. PMLR, 13--18 Jul 2020.
+
+\bibitem{hoffman2020}
+F.~Hoffmann, B.~Hosseini, Z.~Ren, and A.~M. Stuart.
+\newblock Consistency of semi-supervised learning algorithms on graphs: Probit
+  and one-hot methods.
+\newblock {\em Journal of Machine Learning Research}, 21(186):1--55, 2020.
+
+\bibitem{amath563}
+B.~Hosseini.
+\newblock Amath 563: Inferring structure of complex systems, Spring 2023.
+
+\bibitem{sanzalonso2023}
+D.~Sanz-Alonso and R.~Yang.
+\newblock The spde approach to matérn fields: Graph representations, 2023.
+
+\bibitem{zhu2005}
+X.~Zhu.
+\newblock Semi-supervised learning literature survey.
+\newblock Technical report, University of Wisconsin-Madison Department of
+  Computer Sciences, 2005.
+
+\end{thebibliography}

@@ -1,0 +1,115 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+
+% Page layout
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Lucas Cassin Cruz Burke}
+\rhead{AMATH 569}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
+
+% Theorem environments
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\theoremstyle{remark}
+\newtheorem*{solution}{Solution}
+
+\title{AMATH 569 Homework 3}
+\author{Lucas Cassin Cruz Burke}
+\date{May 3, 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{problem}
+    Solve using Fourier transform in $x$ and Laplace transform in $t$: 
+
+    \begin{align*}
+        u_t - Du_{xx} = \delta(x-\xi)\delta(t-\tau) && \begin{cases}
+            -\infty < x < \infty, & t >0 \\ -\infty < \xi < \infty, & \tau >0
+        \end{cases} \\
+        \text{where $u(x,t) \rightarrow 0$ as $x \rightarrow \pm \infty$ and $u(x,0)=0$.}
+    \end{align*}
+\end{problem}
+\begin{solution}
+    We begin by Fourier transforming in $x$. Let $$\hat u(k,t) = \int_{-\infty}^\infty e^{ikx} u(x,t) dx$$
+
+    Then, taking the Fourier transform of both sides of the PDE gives us the following ODE: $$\hat u_t + Dk^2 \hat u = e^{ik \xi} \delta(t-\tau)$$
+
+    We now take the Laplace transform in $t$. Let $U(x, s)$ denote the Laplace transform of $u(x,t)$, and similarly let $\hat U(k,s)$ denote the Laplace transform of $\hat u(k,t)$. Then taking the Laplace transform of both sides of the above ODE results in $$s \hat U + Dk^2 \hat U = e^{ik\xi}e^{-s\tau}$$
+
+    Rearranging, we have $$\hat U(k, s) = \frac{\exp\{ik\xi - s\tau\}}{s+Dk^2}$$
+
+    Taking the inverse Laplace transform, we have $$\mathcal L^{-1}\{ \hat U \}(k, t) = \hat u (k,t) =  \theta(t-\tau) e^{ik\xi}e^{-Dk^2(t-\tau)}$$
+
+    where $\theta(x)$ is the Heaviside step function. We now take the inverse Fourier transform to find $u$. We have 
+
+    \begin{align*}
+        u(x,t) &= \mathcal F^{-1}\{\hat u \}(x,t) = \frac{1}{2\pi} \int_{-\infty}^{\infty} \theta(t-\tau)e^{-ikx}e^{ik\xi}e^{-Dk^2(t-\tau)}dk \\ 
+        &= \frac{\theta(t-\tau)}{2\pi} \int_{-\infty}^\infty \exp \left[ -D(t-\tau)\left(k+ \frac{i(x-\xi)}{2D(t-\tau)} \right)^2 - \frac{(x-\xi)^2}{4D(t-\tau)} \right] dk \\
+        &= \frac{\theta(t-\tau)}{2\pi} \exp \left(-\frac{(x-\xi)^2}{4D(t-\tau)}\right) \int_{-\infty}^\infty \exp \left[ -D(t-\tau)\left(k+ \frac{i(x-\xi)}{2D(t-\tau)}\right)^2 \right] dk \\
+        &= \frac{\theta(t-\tau)}{2\pi} \exp \left(-\frac{(x-\xi)^2}{4D(t-\tau)}\right) \cdot I
+    \end{align*}
+
+    Where we define $$I = \int_{-\infty}^\infty \exp \left[ -D(t-\tau)\left(k+ \frac{i(x-\xi)}{2D(t-\tau)}\right)^2 \right] dk$$
+
+    Substitute $\gamma = k+ \frac{i(x-\xi)}{2D(t-\tau)}$, then 
+
+    $$I = \int_{-\infty}^\infty \exp \left[ -D(t-\tau) \gamma^2 \right] d\gamma$$
+
+    Now substitute $\phi = \frac{\gamma}{\sqrt{D(t-\tau)}}$, then 
+
+    $$I = \sqrt{D(t-\tau)} \int_{-\infty}^\infty \exp\left[ - \phi^2 \right] d\phi = \sqrt{\pi D(t-\tau)}$$
+
+    Plugging this back into our solution gives us 
+
+    $$u(x,t) = \begin{cases}
+        0 & \text{for $t < \tau$} \\
+        \frac{1}{2} \sqrt{\frac{D(t-\tau)}{\pi}} \exp \left[ -\frac{(x-\xi)^2}{4D(t-\tau)}\right] & \text{for $t > \tau$}
+    \end{cases}$$
+
+\end{solution}
+
+\begin{problem}
+    Solve the same problem without using a Laplace transform in $t$. Figure out the matching condition for your ODE across $t=\tau$. 
+\end{problem}
+\begin{solution}
+    We return now to the original ODE which we derived in Problem 1. 
+
+    $$\hat u_t + Dk^2 \hat u = e^{ik \xi} \delta(t-\tau)$$
+
+    For $t \ne \tau$, this equation is of the form $$\hat u_t + Dk^2 \hat u =0$$
+
+    This is a homogeneous ODE with the solution $$\hat u = A \exp \left[ -Dk^2(t-\tau) \right]$$
+
+    In order to satisfy our initial condition $u(x,0)=0$ we must have $A=0$ for $t < \tau$. We can determine the coefficient for $t > \tau$ by integrating across a small duration of time in which the impulse occurs. 
+
+    \begin{align*}
+        \Delta \hat u &= \lim_{\epsilon \rightarrow 0} \int_{\tau - \epsilon}^{\tau + \epsilon} \left[\hat u_t + Dk^2 \hat u \right]dt \\
+        &= \lim_{\epsilon \rightarrow 0} \int_{\tau - \epsilon}^{\tau + \epsilon} e^{ik \xi} \delta(t-\tau)dt \\
+        &= e^{ik \xi}
+    \end{align*}
+
+    Hence, for $t > \tau$ we have $A = e^{ik\xi}$. With this, we can write the ODE solution $\hat u$ as
+
+    $$\hat u = e^{ik\xi}\exp\left[ -Dk^2(t-\tau) \right]$$
+
+    Lastly, we take the inverse Fourier transform to find our PDE solution. We have 
+
+    \begin{align*}
+        u(x,t) &= \mathcal F^{-1}\left\{ \hat u \right\}(x,t) =  \frac{1}{2 \pi} \int_{-\infty}^\infty \theta(t-\tau) e^{-ikx} e^{ik\xi} \exp\left[ -Dk^2(t-\tau)\right] dk 
+    \end{align*}
+
+    We recognize this as the same integral which we evaluated for $u(x,t)$ in Problem 1. This shows that these two approaches yield the same result. 
+
+\end{solution}
+
+\end{document}
