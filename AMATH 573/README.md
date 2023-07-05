@@ -1,4 +1,12 @@
-# AMATH 573
+# AMATH 573: Coherent Structures, Pattern Formation, and Solitons
+Instructor: [Bernard Deconinck](https://depts.washington.edu/bdecon/bernard/)
+
+## Overview
+This PhD level course covered analytical methods for nonlinear wave equations, most notably the **[Koreweg-De Vries equation](https://en.wikipedia.org/wiki/Korteweg–De_Vries_equation)** (KdV), which is used in the modeling of long, shallow water waves (e.g. ocean waves), and many other physical problems. The course begins with an introduction of the equation and shows how it can be derived in several different ways, including 
+-  as a continuous limit of the [Fermi-Pasta-Ulam-Tsingou problem](https://en.wikipedia.org/wiki/Fermi–Pasta–Ulam–Tsingou_problem) (FPUT), i.e. a lattice of interacting nonlinear springs;
+- from the [Euler equations](https://en.wikipedia.org/wiki/Euler_equations_(fluid_dynamics)) governing long waves in shallow water via the method of multiple scales;
+- via the connection with the defocusing [Nonlinear Schrödinger Equation](https://en.wikipedia.org/wiki/Nonlinear_Schrödinger_equation) (NLS), which models the evolution of modulated wave trains in nonlinear optics.
+
 
 ## Syllabus
 1. Introduction. Context. Some history. Reference materials: The FPU problem, Poincare's work on King Oscar II's problem.
